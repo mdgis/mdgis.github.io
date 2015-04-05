@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <link rel="stylesheet" type="text/css" href="css/mycss.css">
+</head>
+<style>
+
+.taz {
+  fill: gray;
+  stroke: #000041;
+  stroke-width: .5;
+}
+
+
+
+.a0-9 { fill:rgb(247,251,255); }
+.a1-9 { fill:rgb(222,235,247); }
+.a2-9 { fill:rgb(198,219,239); }
+.a3-9 { fill:rgb(158,202,225); }
+.a4-9 { fill:rgb(107,174,214); }
+.a5-9 { fill:rgb(66,146,198); }
+.a6-9 { fill:rgb(33,113,181); }
+.a7-9 { fill:rgb(8,81,156); }
+.a8-9 { fill:rgb(8,48,107); }
+
+.t0-9 { fill:#EFE2E2;}
+.t1-9 { fill:#E0C6C6;}
+.t2-9 { fill:#D1AAAA;}
+.t3-9 { fill:#C18D8D;}
+.t4-9 { fill:#B27171;}
+.t5-9 { fill:#A35555;}
+.t6-9 { fill:#933838;}
+.t7-9 { fill:#841C1C;}
+.t8-9 { fill:#750000;}
+
+
+.w0-9 { fill:#FFFFFF}
+.w1-9 { fill:#C6C6C6; }
+.w2-9 { fill:#AAAAAA; }
+.w3-9 { fill:#8D8D8D; }
+.w4-9 { fill:#717171; }
+.w5-9 { fill:#555555 }
+.w6-9 { fill:#383838;}
+.w7-9 { fill:#1C1C1C; }
+.w8-9 { fill:#000000; }
+
+</style>
+<body>
+
+<!--Slider has same class as when year is changed similar data actions occur as with continent checkboxes-->
+<div>
+
+    <div class="Atype" id = "slider">
+        <span id = "min"></span><input id="theSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value)"><span id="max"></span>
+        <span>Inundation Level :&nbsp;</span>
+        <span id="range">0ft</span>
+    </div>
+    <div class="Atype" id = "auto" >Auto</div>
+    <div class="Atype" id = "transit" >Transit</div>
+    <div class ="Atype" id = "walk">Walk</div>
+
+    <div id = "map"></div>
+</div>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script>
+
+var data;
+var access;
+var auto, transit, walk;
+var width = 1100,
+    height = 1000;
+var columns = [];
+var rateByTAZ = d3.map();
+var current;
+var max = 0;
+
+var projection = d3.geo.mercator()
+        .center([-71.1603, 42.305])
+        .scale(25000)
+        .translate([width / 2, height / 2]);
+
+// find the top left and bottom right of current projection
+var path = d3.geo.path()
+    .projection(projection);
+
+var zoom = d3.behavior.zoom()
+        .translate(projection.translate())
+        .scale(projection.scale())
+        .scaleExtent([height*25, 500 * height])
+        .on("zoom", zoomed);
+
+var svg = d3.select("#map").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+var g = svg.append("g")
+        .call(zoom);
+
+queue()
+    .defer(d3.json, "data/topotaz2.json")
+    .defer(d3.tsv, "data/access_JOBS/autoJobs.tsv")
+    .defer(d3.tsv, "data/access_Jobs/transitJobs.tsv")
+    .defer(d3.tsv, "data/access_JOBS/walkJobs.tsv")
+    .await(ready);
+
+function ready(error, theTaz, Qauto, Qtransit, Qwalk) {
+    data = theTaz;
+    auto = Qauto;
+    transit = Qtransit;
+    walk = Qwalk;
+    access = auto;
+    current = auto;
+
+    wrangleData(access, 0);
+    updateVis()
+
+}
+
+function showValue(val){
+    document.getElementById("range").innerHTML= val + "ft";
+    wrangleData(access, val);
+}
+
+
+function updateVis(){
+    console.log(max)
+
+    var check = Object.keys(access[0])[1]
+    var q =  check.indexOf("Dta") >= 0 ? "a" : check.indexOf("transit") >= 0 ? "t" : "w";
+    var quantize = d3.scale.quantize()
+            .domain([-.05, max])
+            .range(d3.range(9).map(function(i) { return q + i + "-9"; }));
+
+    svg.select("g")
+            .attr("class", "taz")
+            .selectAll("path")
+            .data(topojson.feature(data, data.objects.taz).features)
+            .enter().append("path")
+            .attr("class", function(d) {
+                return quantize(rateByTAZ.get(d.properties.TAZ));})
+            .attr("d", path);
+}
+
+function wrangleData(access, level){
+    if (Object.keys(current[0])[1] !== Object.keys(access[0])[1]){
+        max = 0;
+        current = access
+    }
+    columns = Object.keys(access[0]);
+    console.log(columns)
+    columns.splice(columns.indexOf("Z"),1);
+
+    level = columns[level]
+    access.forEach(function(d) {
+        if (d[level] > max) max = +d[level];
+        rateByTAZ.set(d.Z, + d[level]); });
+
+    updateVis()
+}
+
+
+d3.select("body").selectAll(".Atype").on("click", function(d){
+    if (this.id === "walk") access = walk;
+    if (this.id === "auto") access = auto;
+    if (this.id === "transit") access = transit;
+    wrangleData(access,+d3.select("#theSlider").property("value") )
+});
+d3.select(self.frameElement).style("height", height + "px");
+
+
+function zoomed() {
+    projection.translate(d3.event.translate).scale(d3.event.scale);
+    g.selectAll("path").attr("d", path);
+}
+</script>

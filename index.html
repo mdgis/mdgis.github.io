@@ -101,7 +101,7 @@ var g = svg.append("g")
 queue()
     .defer(d3.json, "data/topotaz2.json")
     .defer(d3.tsv, "data/access_JOBS/autoJobs.tsv")
-    .defer(d3.tsv, "data/access_Jobs/transitJobs.tsv")
+    .defer(d3.tsv, "data/access_JOBS/transitJobs.tsv")
     .defer(d3.tsv, "data/access_JOBS/walkJobs.tsv")
     .await(ready);
 

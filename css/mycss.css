@@ -1,3 +1,8 @@
+.container {
+    width: auto;
+    margin-left: 25px;
+    margin-right: 65px;
+}
 body{
     font-family: 'PT Sans', sans-serif;
 }
@@ -18,8 +23,9 @@ body{
     fill-opacity: .3;
     pointer-events: all;
 }
-
+.Btype,
 .Atype {
+    margin-bottom: 10px;
     float: left;
     margin-left: 5px;
     margin-right: 5px;
@@ -38,3 +44,93 @@ body{
     border: none;
     line-height: 13px;
 }
+
+.taz {
+    fill: gray;
+    stroke: #000041;
+    stroke-width: .5;
+}
+
+#map {
+    clear: left;
+    width: 800px;
+    height: 900px;
+}
+
+circle:hover{
+    cursor: crosshair;
+}
+
+.charts {
+    margin: 2px;
+    background-color: white;
+    border-bottom: 1px solid #f5f5f5;
+    height: 225px;}
+
+#DataSelection{
+    margin: 2px;
+    border-bottom: 1px solid #f5f5f5;
+    height: 450px;
+}
+
+.RoadPath {
+    stroke: #000041;
+    stroke-width: .5;
+}
+
+#context{
+    height: 93%
+}
+
+.hide{
+    background-color: #000000;
+    opacity: 0;
+}
+
+.countries {
+    stroke: #6cb0e0;
+    stroke-width: 0.5px;
+
+}
+.centroids {
+    stroke: black;
+    fill: gray;
+    opacity: .5;
+    stroke-width: .1px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.a0-9 { fill:black; }
+.a1-9 { fill:rgb(222,235,247); }
+.a2-9 { fill:rgb(198,219,239); }
+.a3-9 { fill:rgb(158,202,225); }
+.a4-9 { fill:rgb(107,174,214); }
+.a5-9 { fill:rgb(66,146,198); }
+.a6-9 { fill:rgb(33,113,181); }
+.a7-9 { fill:rgb(8,81,156); }
+.a8-9 { fill:rgb(8,48,107); }
+
+.t0-9 { fill:none;}
+.t1-9 { fill:#E0C6C6;}
+.t2-9 { fill:#D1AAAA;}
+.t3-9 { fill:#C18D8D;}
+.t4-9 { fill:#B27171;}
+.t5-9 { fill:#A35555;}
+.t6-9 { fill:#933838;}
+.t7-9 { fill:#841C1C;}
+.t8-9 { fill:#750000;}
+
+
+.w0-9 { fill:none}
+.w1-9 { fill:none; }
+.w2-9 { fill:#AAAAAA; }
+.w3-9 { fill:#8D8D8D; }
+.w4-9 { fill:#717171; }
+.w5-9 { fill:#555555 }
+.w6-9 { fill:#383838;}
+.w7-9 { fill:#1C1C1C; }
+.w8-9 { fill:#000000; }
+
+.white {fill: none}

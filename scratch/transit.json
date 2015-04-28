@@ -1,0 +1,781 @@
+{
+	"mode" : "Transit",
+	"value": 100,
+	"children": [
+			{
+				"mode":"Commuter Rail",
+				"value": 50,
+				"children":
+				  [{
+				    "Name": "Attleboro ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Fairmount ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Fitchburg ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Framingham ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Franklin ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Haverhill ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Kingston ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Lowell ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Middleboro ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Needham ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Newburyport ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Plymouth ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Rockport ",
+				    "Mode": 5,
+				    "value": 25
+				  },
+				  {
+				    "Name": "Stoughton ",
+				    "Mode": 5,
+				    "value": 25
+				  }
+			]
+		},
+		{ "mode": "The T",
+			"value": 25,
+			"children": [
+				  {
+				    "Name": "Blue ",
+				    "Mode": 3,
+				    "value": 30
+				  },
+				  {
+				    "Name": "Orange ",
+				    "Mode": 3,
+				    "value": 30
+				  },
+				  {
+				    "Name": "Red ",
+				    "Mode": 3,
+				    "value": 15
+				  },
+				  {
+				    "Name": "Green ",
+				    "Mode": 4,
+				    "value": 15
+				  }]
+		},
+		{ "mode": "Bus",
+			"value": 25,
+			"children": [
+				  {
+				    "Name": "1",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "4",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "5",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "7.0999999",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "8",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "9",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "11",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "14",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "15",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "16.20000076",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "17",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "18",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "19",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "20",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "21",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "22",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "23",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "24",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "27",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "28",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "29",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "30.20000076",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "31",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "32",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "33.40000153",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "34",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "35.09999847",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "36",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "37.29999924",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "39",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "40.5",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "41",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "42",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "43",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "44.09999847",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "45.09999847",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "47.79999924",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "50",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "51",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "52",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "55.09999847",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "57",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "59",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "60",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "62.40000153",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "64.59999847",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "65",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "66",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "67.40000153",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "68",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "69",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "70",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "71",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "72",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "73",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "74",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "75",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "76.30000305",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "77",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "78.09999847",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "79",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "80",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "83",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "85",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "86",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "87",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "88",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "89",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "90",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "91",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "92",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "93.19999695",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "94",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "95",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "96",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "97.5",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "99.69999695",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "100",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "100.3000031",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "101",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "101.4000015",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "104",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "105.0999985",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "106",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "108.0999985",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "109",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "110",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "111",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "114",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "116.4000015",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "117.5",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "119.0999985",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "120",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "131.3999939",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "132",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "134.6000061",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "136.5",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "137.3000031",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "210.3000031",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "211",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "214",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "215.1000061",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "216",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "220.3000031",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "222",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "225",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "230.3000031",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "236.199997",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "238",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "240",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "350.3999939",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "354",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "411.7999878",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "426",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "429",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "430.5",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "435",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "436",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "441",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "442",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "450",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "455",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "459",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "501",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "502",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "504",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "505",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "553",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "554",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "CT2 ",
+				    "Mode": 1,
+				    "value": 10
+				  },
+				  {
+				    "Name": "LoganCirc ",
+				    "Mode": 2,
+				    "value": 10
+				  },
+				  {
+				    "Name": "SILVER",
+				    "Mode": 2,
+				    "value": 15
+				  },
+				  {
+				    "Name": "SL1",
+				    "Mode": 2,
+				    "value": 15
+				  },
+				  {
+				    "Name": "SLIVER",
+				    "Mode": 2,
+				    "value": 15
+				  }
+			  ]
+		}
+	]
+}

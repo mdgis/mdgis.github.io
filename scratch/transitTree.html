@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src = "../libs/d3/d3.min.js"></script>
+
+
+<style>
+.boxText{
+    font-size: 11px;
+    font-family: Consolas, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    fill: black;
+    font-weight: bold;
+}
+
+rect:hover{
+    fill: yellow;
+}
+rect.text{
+
+}
+</style>
+</head>
+<body>
+<script>
+
+    var canvas = d3.select("body").append("svg")
+            .attr("width", 400)
+            .attr("height", 400);
+
+    d3.json("transit.json", function(data){
+        var treemap = d3.layout.treemap().sticky(true)
+                .size([400,400])
+                .nodes(data);
+
+        var cells = canvas.selectAll(".cell")
+                .data(treemap)
+                .enter()
+                .append("g")
+                .attr("class", "cell");
+
+        cells.append("rect")
+                .on("click",function(d){
+                    console.log(this.__data__.Line)
+                })
+                .attr("x",function (d) { return d.x })
+                .attr("y", function (d) { return d.y })
+                .attr("width", function (d) { return d.dx })
+                .attr("height", function (d) { return d.dy })
+                .attr("fill", function (d) { return d.children ? null :  colorLines(d)})
+                .style("stroke", "white");
+
+        cells.append("text")
+                .attr("x", function (d) { return d.x + d.dx /10})
+                .attr("y", function (d) { return d.y + d.dy / 2})
+                .text(function (d) {
+                    return d.Line === undefined? null: cleanText(d.Line)})
+                .attr("class", "boxText")
+                .style("fill", function(d){
+                    if (d.Mode === 1){
+                        return "black"
+                    }
+                });
+
+        function cleanText(d){
+            if (!isNaN(d.slice(0,1))){
+                return Math.floor(d)
+            } else {
+                return d
+            }
+        }
+
+        function colorLines(d) {
+            if (d.Mode === 1) {
+                return "#C2C2D6"
+            }
+            else if (d.Mode === 5) {
+                return "#E6F0F5"
+            }
+            else {
+                return d.Line === "Red" ? "#FF6666" : d.Line === "Green" ? "#99D6AD" : d.Line === "Blue" ? "#C2C2F0" :
+                        d.Line === "Orange" ? "#FFC266" : "yellow"
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

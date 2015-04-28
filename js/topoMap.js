@@ -1,57 +1,74 @@
-TopoStreetMapVis = function(){
-    this.initVis()
+TopoStreetMapVis = function(_map, _data){
+    this.map = _map;
+    this.collection = _data;
+    this.initVis();
+    this.updateVis(this.collection, "V")
 };
 
-TopoStreetMapVis.prototype.initVis = function(){
-    that = this;
-    svg = d3.select(map.getPanes().overlayPane).append("svg");
-    g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
-    gTopoMap = g.append("g").attr("class", "gTopoMap displayed");
+///Probably need to fix some of the This & That things
 
-    d3.json("data/TdtaVp.json", function(collection) {
-        that = topo_street_viz;
-        var transform = d3.geo.transform({point: projectPoint}),
-            path = d3.geo.path().projection(transform);
+TopoStreetMapVis.prototype.initVis = function() {
+    var that = this;
+    that.svg = d3.select(that.map.getPanes().overlayPane).append("svg");
+    that.g = that.svg.append("g").attr("class", "leaflet-zoom-hide");
+    that.gTopoMap = that.g.append("g").attr("class", "gTopoMap displayed");
+};
 
-        var vMax = d3.max(collection.objects['dtaV'].geometries, function(d) {return d.properties["VSMP_2"]});
-        var vScale = d3.scale.linear()
-            .domain([100,vMax])
-            .range([1,25]);
+TopoStreetMapVis.prototype.updateVis = function(collection, netAttribute) {
+    var that = this;
+    var transform = d3.geo.transform({point: projectPoint}),
+        path = d3.geo.path().projection(transform);
 
-        var feature = gTopoMap.selectAll("path")
-            .data(topojson.feature(collection, collection.objects['dtaV']).features)
-            .enter().append("path");
+    var scaleMax = netAttribute === "q" ? 350 : 50;
+    var vMax = d3.max(collection.objects['dta'].geometries, function(d) {return d.properties[netAttribute]});
+    var vScale = d3.scale.linear()
+        .domain([10,vMax])
+        .range([1,scaleMax]);
 
-        feature.attr("class","RoadPath").style("stroke-width", function(d){
-            return vScale(d.properties["VSMP_2"])
+    var feature = that.gTopoMap.selectAll("path")
+        .data(topojson.feature(collection, collection.objects['dta']).features)
 
+    feature
+        .enter().append("path")
+
+
+
+    feature.attr("class","RoadPath").style("stroke-width", function(d){
+        return vScale(d.properties[netAttribute])}
+        )
+        .attr("stroke", function(d){
+            return d.properties[netAttribute] > 60 ? "red" : "darkBlue"
         });
 
-        map.on("viewreset", reset);
-        reset();
-        // Reposition the SVG to cover the features.
-        function reset() {
-            var bounds = path.bounds(topojson.feature(collection, collection.objects['dtaV'])),
-                topLeft = bounds[0],
-                bottomRight = bounds[1];
 
-            svg.attr("width", bottomRight[0] - topLeft[0])
-                .attr("height", bottomRight[1] - topLeft[1])
-                .style("left", topLeft[0] + "px")
-                .style("top", topLeft[1] + "px");
+    feature.exit().remove();
 
-            gTopoMap.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+    that.map.on("viewreset", reset);
+    reset();
+    // Reposition the SVG to cover the features.
+    function reset() {
 
-            feature.attr("d", path);
-        }
+        var bounds = path.bounds(topojson.feature(collection, collection.objects['dta'])),
+            topLeft = bounds[0],
+            bottomRight = bounds[1];
 
-        function projectPoint(x, y) {
-            var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-            this.stream.point(point.x, point.y);
-        }
+        that.svg.attr("width", bottomRight[0] - topLeft[0])
+            .attr("height", bottomRight[1] - topLeft[1])
+            .style("left", topLeft[0] + "px")
+            .style("top", topLeft[1] + "px");
 
-    });
+        that.gTopoMap.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+        feature.attr("d", path);
+    }
+
+    function projectPoint(x, y) {
+        var point = that.map.latLngToLayerPoint(new L.LatLng(y, x));
+        this.stream.point(point.x, point.y);
+    }
+
+
 };
 
 

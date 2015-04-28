@@ -8,7 +8,6 @@ function chloroQuantile(data, k, brkOrJenk){
     if (brkOrJenk === "jenks"){
         quants = ss.jenks(data, k)
         quants[quants.length-1]+= .00000001;
-        console.log(quants)
         return quants
     }
 

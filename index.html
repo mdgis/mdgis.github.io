@@ -10,6 +10,7 @@
     <script src="libs/topojson-master/topojson.js"></script>
     <script src="libs/leaflet-0.7.3/leaflet.js"></script>
     <script src="packages/simple_statistics.js"></script>
+    <script src="libs/jquery/jquery-ui.js"></script>
 
     <!-- My Tools -->
     <script src="js/chloroClass.js"></script>
@@ -17,7 +18,20 @@
     <!-- LEAFLET DATA -->
     <script src="data/transitLines.js"></script>
     <script src="data/dta100V.js"></script>
-    <script src="RawData/taz.js"></script>
+    <script src="data/rawTazClip.js"></script>
+    <script src="data/water/slrp_6ft.js"></script>
+    <script src="data/water/slrp_5ft.js"></script>
+    <script src="data/water/slrp_4ft.js"></script>
+    <script src="data/water/slrp_3ft.js"></script>
+    <script src="data/water/slrp_2ft.js"></script>
+    <script src="data/water/slrp_1ft.js"></script>
+    <script src="data/assets/roads.js"></script>
+    <script src="data/assets/exitsPT.js"></script>
+    <script src="data/assets/busStops.js"></script>
+    <script src="data/assets/mbtaArc.js"></script>
+    <script src="data/assets/mbtaNodes.js"></script>
+    <script src="data/assets/busLines.js"></script>
+
 
     <!-- Viz Elements -->
     <script src="js/ColorScales.js"></script>
@@ -26,16 +40,13 @@
     <script src="js/streetMap.js"></script>
     <script src="js/assets.js"></script>
     <script src="js/chart.js"></script>
-    <script src="js/topoNet.js"></script>
     <script src="js/groupedChart.js"></script>
     <script src="js/spider.js"></script>
-
-
+    <script src="js/LineCharts.js"></script>
 
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
     <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="libs/leaflet-0.7.3/leaflet.css" />
-
     <link rel="stylesheet" type="text/css" href="css/mycss.css">
 
 
@@ -43,203 +54,728 @@
 
 <body>
 
-<div class="container">
-    <div class="row clearfix">
-        <div class="col-md-12 column">
-            <div>
+<script>
+    $(document).ready(function(){
 
-                <div class="Btype" id = "slider">
-                    <span id = "min"></span><input id="theSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value)"><span id="max"></span>
-                    <span>Inundation Level :&nbsp;</span>
-                    <span id="range">0ft</span>
+        $('ul.tabs li').click(function(){
+            var tab_id = $(this).attr('data-tab');
+
+            $('ul.tabs li').removeClass('current');
+            $('.tab-content').removeClass('current');
+
+            $(this).addClass('current');
+            $("#"+tab_id).addClass('current');
+        })
+
+    })
+</script>
+
+<div class="container">
+    <div class="col-md-12 column" >
+        <h1>Visualizing Inundation Impacts on Transportation Networks</h1> </div>
+
+    <!--This is the top Bar -->
+    <div class="row clearfix">
+
+        <div class="col-md-12 column" id = "Bar">
+                <div class="btn-group-horizontal btn-group" id = "AssetSelection">
+                    <div class="Btype" id = "slider">
+                        <span id = "min"></span><input id="AssetSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value,'Asset')"><span id="max"></span>
+                        <span>Inundation Level :&nbsp;</span>
+                        <span id="Assetrange">0ft</span>
+                    </div>
+                    <button type="button" class="btn btn-default AssetSelect">Demographics</button>
+                    <div class="btn-group-vertical">
+                        <button type="button" class="btn btn-default dropdown-toggle AssetSelect"
+                                data-toggle="dropdown">Highway<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu AssetSelect" >
+                            <li><a href="#">Roads</a></li>
+                            <li><a href="#">Highway Exits</a></li>
+                        </ul>
+                    </div>
+                    <div class="btn-group-vertical">
+                        <button type="button" class="AssetSelect btn btn-default dropdown-toggle"
+                                data-toggle="dropdown">Transit<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu AssetSelect">
+                            <li><a href="#">Bus Stops</a></li>
+                            <li><a href="#">Bus Lines</a></li>
+                            <li><a href="#">T-Stops</a></li>
+                            <li><a href="#">T-Lines</a></li>
+                        </ul>
+                     </div>
+                 </div>
+
+             </div>
+        </div>
+    <!--These are the Tabs-->
+    <div class = "row clearfix">
+    <div class="col-lg-6">
+        <div id="map3"></div>
+    </div>
+        <div class="col-lg-6">
+            <div class="tabContainer">
+                <ul class="tabs">
+                    <li class="tab-link-current" data-tab="tab-1">Context</li>
+                    <li class="tab-link" data-tab="tab-2">Charts</li>
+                    <li class="tab-link" data-tab="tab-3">Specifics</li>
+                </ul>
+                <div id="tab-1" class = "tab-content current">
+                    <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
                 </div>
-                <div class="Atype" id = "auto" >Auto</div>
-                <div class="Atype" id = "transit" >Transit</div>
-                <div class="Atype" id = "walk">Walk</div>
+
+                <div id="tab-2" class="tab-content">
+                    <p><strong>Click Bar to Update Map &nbsp;&nbsp;&nbsp; </strong>
+                        <button type="button" class="Normal btn btn-default dropdown-toggle" onclick="normalCharts()"> Normalize
+                    </button> </p>
+                    <div class="col-md-6 column">
+                        <div class = "charts" id = "chart"></div>
+                        </div>
+                    <div class="col-md-6 column">
+                        <div class = "charts" id = "chart1"></div>
+                    </div>
+                    <div class="col-md-6 column">
+                        <div class = "charts" id = "chart2"></div>
+                    </div>
+                    <div class="col-md-6 column">
+                        <div class = "charts" id = "chart3"></div>
+                    </div>
+                </div>
                 <div>
-                   <label>Layout&nbsp;&nbsp;<select id = "dropDown">
-                        <option value="Access">Accessibility</option>
-                        <option value="Volume">Volume</option>
-                        <option value="Transit" selected="selected" >Transit Change</option>
-                        <option value="Assets">Inundated Assets</option>
-                        <option value="Lost">Lost Trips</option>
-                    </select></label>
+
+
+                </div>
+                <div id="tab-3" class="tab-content">
+                    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                    <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+                    <p><strong>Click to see Percentages &nbsp;&nbsp;&nbsp; </strong>
+                        <button type="button" class="Normal btn btn-default dropdown-toggle" id="spNormal" value = 0 onclick="normalSpecial()"> Normalize
+                        </button> </p>
+                    <div id = "context"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!------------>
+
+
+    <!--These are the "Some other title paragraphs"-->
+    <div class="row clearfix">
+        <div class="col-md-12 column intro">
+
+    <div class="row clearfix">
+
+
+        <div class="col-md-12 column" id = "Bar">
+            <h2>Transit Ridership Change</h2>
+                    <div class="btn-group-horizontal btn-group" id = "AssetSelection">
+                        <div class="Btype" id = "slider">
+                            <span id = "min"></span><input id="Transit" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value,'Transit')"><span id="max"></span>
+                            <span>Inundation Level :&nbsp;</span>
+                            <span id="Transitrange">0ft</span>
+                        </div>
+
+                    </div>
                     </div>
 
             </div>
         </div>
-    </div>
+
     <div class="row clearfix">
+
         <div class="col-md-6 column">
             <div id="map"></div>
         </div>
         <div class="col-md-6 column">
             <!--Top-->
             <div id="DataSelection">
-                <div class="btn-group-horizontal">
-                <button type="button" class="btn btn-primary">Demographics</button>
-                <button type="button" class="btn btn-primary">Highway</button>
-                <button type="button" class="btn btn-primary">Transit</button>
-                <button type="button" class="btn btn-primary">Misc.</button>
-
-               </div>
-                <div id = "context"></div>
+                    <!--Holds the Transit Trip Selection Table-->
             </div>
 
-            <div>
-                <div class="col-md-6 column">
-                    <div class = "charts" id = "chart"></div>
-                </div>
-                <div class="col-md-6 column">
-                    <div class = "charts" id = "chart1"></div>
-                </div>
-            </div>
-            <div>
-                <div class="col-md-6 column">
-                    <div class = "charts" id = "chart2"></div>
-                </div>
-                <div class="col-md-6 column">
-                    <div class = "charts" id = "chart3"></div>
-                </div>
+            <div id="RoutesAtStop" style = "margin-left: 10px;border-bottom: 1px solid #000000">
+                <!--Holds the Transit Trip Selection Table-->
             </div>
         </div>
     </div>
-</div>
 
-<!--Slider has same class as when year is changed similar data actions occur as with continent checkboxes-->
+    <div class="row clearfix">
 
+        <div class="col-md-12 column intro" >
+
+            <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare orci a finibus pulvinar. Donec dapibus magna a nunc accumsan mattis. Duis eu rhoncus quam. Vestibulum in tortor sed nisl malesuada malesuada. Vivamus sed neque a metus mattis molestie eu ut elit. Sed dignissim id dolor sit amet tristique. Vivamus porttitor nisi auctor aliquet fringilla. Aenean vel nunc ultricies velit pharetra maximus. Integer erat est, porttitor sed tempor nec, mollis ac mi.
+
+                Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+
+                Nam sed diam et urna fermentum luctus et eget magna. Fusce sed nisi tempor, molestie dui eget, interdum eros. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque accumsan lorem finibus velit consectetur, a fermentum risus elementum. Aliquam lobortis enim at tristique maximus. Sed nec porttitor tortor. Aenean vitae metus non eros cursus hendrerit.
+
+                Aliquam erat volutpat. Nullam at mauris lorem. Aliquam tempus nec ligula id suscipit. Nunc elementum nulla a massa euismod, sed ullamcorper orci mollis. Morbi sem arcu, elementum ac dapibus in, tincidunt eu lectus. Nunc lacinia dolor turpis, id efficitur nisl congue condimentum. Praesent ullamcorper molestie nisl, id ornare nunc commodo ut. Donec suscipit tempus ultrices.
+
+                Maecenas eget feugiat justo. Nullam eros erat, suscipit sed turpis ut, tempus pharetra orci. Suspendisse tincidunt nisl a vehicula fermentum. Mauris bibendum orci dictum placerat vulputate. Fusce ut velit pulvinar, sagittis ex ac, convallis lorem. Duis purus felis, venenatis tristique sollicitudin et, aliquam eget est. Donec egestas odio quis ligula pulvinar, id finibus est sodales. Integer eu semper leo. Maecenas eu lorem vel nunc dapibus ullamcorper. Etiam semper, eros ut ultricies maximus, felis metus aliquam libero, ac efficitur massa sapien eu urna. Nullam vehicula quis tellus tincidunt malesuada. Nulla pulvinar tempus mauris, mollis varius nisl blandit pulvinar. Praesent et porta odio. Sed sit amet volutpat lacus, et hendrerit lorem. Etiam non vestibulum nisl.</p>
+
+
+
+        </div>
+
+        <div class="col-md-12 column">
+            <div class="btn-group-horizontal btn-group" id = "AssetSelection">
+                <h2>Accessibility Impacts</h2>
+                <div class="Btype" id = "slider">
+                    <span id = "min"></span><input id="AccessSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value, 'Access')"><span id="max"></span>
+                    <span>Inundation Level :&nbsp;</span>
+                    <span id="Accessrange">0ft</span>
+                </div>
+
+                <button type="button" class="btn btn-default  Atype">Auto</button>
+                <button type="button" class="btn btn-default  Atype">Transit</button>
+                <button type="button" class="btn btn-default Atype">Walk</button>
+                <button type="button" id ="accessMethod" class="btn btn-default Atype">Cutoff Measure</button>
+
+            </div>
+
+        </div>
+            <!--Accessibility Map-->
+            <div class="col-md-6 column">
+                <!--Top-->
+                <div id="DataSelection1">
+                    <p>   Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                        Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+
+
+                    </p>
+                </div>
+
+                <div id = "DataLower">
+                    <div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 column">
+                <div id="map2"></div>
+            </div>
+
+
+
+
+        <!--Spider Map-->
+
+    </div>
+
+
+        <!--Next Title Area-->
+        <div class =  "row clearfix">
+            <div class="col-md-12 column intro" >
+                <h1>Lost Trips</h1>
+                <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare orci a finibus pulvinar. Donec dapibus magna a nunc accumsan mattis. Duis eu rhoncus quam. Vestibulum in tortor sed nisl malesuada malesuada. Vivamus sed neque a metus mattis molestie eu ut elit. Sed dignissim id dolor sit amet tristique. Vivamus porttitor nisi auctor aliquet fringilla. Aenean vel nunc ultricies velit pharetra maximus. Integer erat est, porttitor sed tempor nec, mollis ac mi.
+
+                    Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+
+                    Nam sed diam et urna fermentum luctus et eget magna. Fusce sed nisi tempor, molestie dui eget, interdum eros. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque accumsan lorem finibus velit consectetur, a fermentum risus elementum. Aliquam lobortis enim at tristique maximus. Sed nec porttitor tortor. Aenean vitae metus non eros cursus hendrerit.
+
+                    Aliquam erat volutpat. Nullam at mauris lorem. Aliquam tempus nec ligula id suscipit. Nunc elementum nulla a massa euismod, sed ullamcorper orci mollis. Morbi sem arcu, elementum ac dapibus in, tincidunt eu lectus. Nunc lacinia dolor turpis, id efficitur nisl congue condimentum. Praesent ullamcorper molestie nisl, id ornare nunc commodo ut. Donec suscipit tempus ultrices.
+
+                    Maecenas eget feugiat justo. Nullam eros erat, suscipit sed turpis ut, tempus pharetra orci. Suspendisse tincidunt nisl a vehicula fermentum. Mauris bibendum orci dictum placerat vulputate. Fusce ut velit pulvinar, sagittis ex ac, convallis lorem. Duis purus felis, venenatis tristique sollicitudin et, aliquam eget est. Donec egestas odio quis ligula pulvinar, id finibus est sodales. Integer eu semper leo. Maecenas eu lorem vel nunc dapibus ullamcorper. Etiam semper, eros ut ultricies maximus, felis metus aliquam libero, ac efficitur massa sapien eu urna. Nullam vehicula quis tellus tincidunt malesuada. Nulla pulvinar tempus mauris, mollis varius nisl blandit pulvinar. Praesent et porta odio. Sed sit amet volutpat lacus, et hendrerit lorem. Etiam non vestibulum nisl.</p>
+
+            </div>
+            <div class="col-md-12 column">
+                <div class="btn-group-horizontal btn-group" id = "SpiderSelection">
+
+                    <div class="Btype" id = "slider">
+                        <span id = "min"></span><input id="LostSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value, 'Lost')"><span id="max"></span>
+                        <span>Inundation Level :&nbsp;</span>
+                        <span id="Lostrange">0ft</span>
+                    </div>
+
+                    <button type="button" class="btn btn-default  Stype">Auto</button>
+                    <button type="button" class="btn btn-default  Stype">Transit</button>
+                    <button type="button" class="btn btn-default Stype">Total</button>
+
+                </div>
+
+            </div>
+            <!--Spider Map-->
+            <div class="col-md-6 column">
+                <!--Top-->
+
+                <div id="spiderHist">
+
+                </div>
+
+                <div id = "DataLower">
+                    <div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 column">
+                <div id="map4">
+            </div>
+
+    </div>
+
+    <!--Traffic Map-->
+    <div class =  "row clearfix">
+        <div class="col-md-12 column intro" >
+            <h1>Auto Network Impacts</h1>
+
+            <div class="btn-group-horizontal btn-group" id = "SpiderSelection">
+
+                <div class="Btype" id = "slider">
+                    <span id = "min"></span><input id="netSlider" type="range" min=0 max=6 step=1 value=0 onchange="showValue(value, 'Net')"><span id="netSpan"></span>
+                    <span>Inundation Level :&nbsp;</span>
+                    <span id="Netrange">0ft</span>
+                </div>
+
+                <button type="button" class="btn btn-default" id="Nettype" value = "V">Volumes</button>
+
+
+            </div>
+        </div>
+        <!--Traffic Volumes Map-->
+        <div class="col-md-6 column">
+            <!--Top-->
+            <div id="DataSelection1">
+                <p>   Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                    Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+
+
+                </p>
+            </div>
+
+            <div id = "DataLower">
+                <div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 column">
+            <div id="map5"></div>
+        </div>
+
+    </div>
+
+
+</div><!-- This closes the map container-->
 
 </body>
 
 
 <script>
-    var t;
-    var jobs, hh, pop, tazarea;
+    var test
     var data;
     var access;
     var current = null;
-    var auto, transit, walk, dta;
-    var currentMap = "Transit"
+    var dta;
+    var currentMap = "Transit";
+    var waterLayer = null;
+    var lookUp ={};
+    d3.json("data/relabelTransit.json", function(data){
+        data.forEach(function(d){
+            lookUp[d.Raw] = d.CleanName
+        })
+    });
+
+    function distance(lat1, lon1, lat2, lon2) {
+        var R = 6371;
+        var a =
+                0.5 - Math.cos((lat2 - lat1) * Math.PI / 180)/2 +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                (1 - Math.cos((lon2 - lon1) * Math.PI / 180))/2;
+
+        return R * 2 * Math.asin(Math.sqrt(a));
+    }
 
     queue()
-            .defer(d3.json, "data/topotaz2.json")
+            .defer(d3.json, "data/TazClip.json")
             .defer(d3.json, "data/assets/jobs.json")
             .defer(d3.json, "data/assets/hh.json")
             .defer(d3.json, "data/assets/pop.json")
             .defer(d3.json, "data/assets/tazarea.json")
-            .defer(d3.tsv, "data/access_JOBS/autoJobs.tsv")
-            .defer(d3.tsv, "data/access_JOBS/transitJobs.tsv")
-            .defer(d3.tsv, "data/access_JOBS/walkJobs.tsv")
-            .defer(d3.json, "data/DTA_g100V.json")
+            .defer(d3.csv, "data/access_JOBS/autoJobs.csv")
+            .defer(d3.csv, "data/access_Jobs/transitJobs.csv")
+            .defer(d3.csv, "data/access_JOBS/walkJobs.csv")
+            .defer(d3.csv, "data/access_JOBS/gautoJobs.csv")
+            .defer(d3.csv, "data/access_Jobs/gtransitJobs.csv")
+            .defer(d3.csv, "data/access_JOBS/gwalkJobs.csv")
+            .defer(d3.csv, "data/assets/groupJobs.csv")
+            .defer(d3.json, "data/dtaTopo0ft.json")
+            .defer(d3.csv, "data/assets/groupRoads.csv")
+            .defer(d3.csv, "data/assets/groupTransitLines.csv")
             .await(ready);
 
-    function ready(error, theTaz, Qjobs, Qhh, Qpop, Qtazarea, Qauto, Qtransit, Qwalk, Qdta) {
+    var water = {
+        "water1": water1,
+        "water2": water2,
+        "water3": water3,
+        "water4": water4,
+        "water5": water5,
+        "water6": water6
+    };
+
+    var Demographics = {
+        "jobs": null,
+        "hh"  : null,
+        "pop" : null,
+        "tazarea":null,
+        "gjobs": null,
+        "groads":null,
+        "gtlines":null
+    };
+
+
+
+    var accessUnits = {
+      "method": "",
+      "mode": "auto",
+      "auto": null,
+      "transit" : null,
+      "walk":null,
+      "gauto":null,
+      "gtransit": null,
+      "gwalk" : null
+    };
+
+    var nets = {
+        "n0" : null,
+        "n1" : null,
+        "n2" : null,
+        "n3" : null,
+        "n4" : null,
+        "n5" : null,
+        "n6" : null
+    };
+
+    var styles = {
+        "waterStyle": function waterStyle(feature){
+                            return {weight: 1, color: "#000033", clickable:false}
+            },
+        "setTransitWeight": function setTransitWeight(mode){
+            return (mode === 1) || (mode === 2) ? 1 :
+                    (mode === 3) || (mode === 4) ? 7:
+                            (mode === 5) ? 3: 7},
+        "setTransitColor": function setTransitColor(mode, name){
+            if (name.toLowerCase()){
+                name = name.toLowerCase();
+                    if ((mode === 1) || (mode === 2)){
+                        return "yellow"
+                    }   else if (mode === 5){
+                        return "gray"
+                    }
+                    else if (name.indexOf("red") > -1){
+                            return "#E22322"
+                    }
+                    else if (name.indexOf("green") > -1){
+                        return "#018445"
+                    }
+                    else if (name.indexOf("blue") > -1) {
+                        return "#007AC2"
+                    }
+                    else if (name.indexOf("orange") > -1) {
+                        return "#F3891D"
+                    }
+                }
+                else {return null}
+            },
+        "transitStyle": function transitStyle(feature) {
+                return {
+                    weight: styles.setTransitWeight(feature.properties["MODE"]),
+                    color: styles.setTransitColor(feature.properties["MODE"], feature.properties["NAME"]),
+                };
+        },
+        "colorLines" : function colorLines(d) {
+            if (d.Mode === 1 || d.Mode === 2) {
+                return "#C2C2D6"}
+            else if (d.Mode === 5) {
+                return "#E6F0F5"
+            } else {
+                var check = d.Name.trim();
+                return check === "Red" ? "#FF6666" : check === "Green" ? "#99D6AD" : check === "Blue" ? "#C2C2F0" :
+                        check === "Orange" ? "#FFC266" : "yellow"}
+            }
+
+    };
+
+
+    function ready(error, theTaz, Qjobs, Qhh, Qpop, Qtazarea, Qauto, Qtransit, Qwalk, QGauto, QGtransit, QGwalk,  Qgrjobs, Qnet0, Qgroads, Qgtlines) {
         data = theTaz;
-        auto = Qauto;
-        transit = Qtransit;
-        walk = Qwalk;
-        access = auto;
-        jobs = Qjobs;
-        dta = Qdta;
-        hh = Qhh;
-        pop = Qpop;
-        tazarea = Qtazarea;
+        accessUnits.auto = Qauto;
+        accessUnits.transit = Qtransit;
+        accessUnits.walk = Qwalk;
+        accessUnits.gauto = QGauto;
+        accessUnits.gwalk = QGtransit;
+        accessUnits.gtransit = QGwalk;
+        access = accessUnits.auto;
+        Demographics.jobs = Qjobs;
+        Demographics.hh = Qhh;
+        Demographics.pop = Qpop;
+        Demographics.gjobs = Qgrjobs;
+        Demographics.tazarea = Qtazarea;
+        Demographics.groads = Qgroads;
+        Demographics.gtlines = Qgtlines;
+        nets.n0 = Qnet0;
 
-        Demographics = {
-            "jobs": jobs,
-            "hh"  : hh,
-            "pop" : pop
-        };
 
-        //Initialize the Map in the HTML
+
+        queue()
+                .defer(d3.json, "data/dtaTopo1ft.json")
+                .defer(d3.json, "data/dtaTopo2ft.json")
+                .defer(d3.json, "data/dtaTopo3ft.json")
+                .defer(d3.json, "data/dtaTopo4ft.json")
+                .defer(d3.json, "data/dtaTopo5ft.json")
+                .defer(d3.json, "data/dtaTopo6ft.json")
+                .await(netLoads);
+
+        function netLoads(error,Qn1, Qn2, Qn3,Qn4,Qn5,Qn6 ){
+            nets.n1 = Qn1;
+            nets.n2 = Qn2;
+            nets.n3 = Qn3;
+            nets.n4 = Qn4;
+            nets.n5 = Qn5;
+            nets.n6 = Qn6;
+            console.log("nets Loaded")
+        }
+
+        //Leaflet Base Maps
         map = L.map("map").setView([42.3596, -71.0561], 12);
-
-
         L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 18,
             minZoom: 9,
             id: 'examples.map-20v6611k'
         }).addTo(map);
 
+        map2 = L.map("map2").setView([42.3596, -71.0561], 10);
+        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            minZoom: 9,
+            id: 'examples.map-20v6611k'
+        }).addTo(map2);
 
 
-        //Old
-        //net_viz = new NetVis(d3.select("#map")); //Just TopoJSON
+        map3 = L.map("map3").setView([42.3596, -71.0561], 12);
+        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            minZoom: 9,
+            id: 'examples.map-20v6611k'
+        }).addTo(map3);
+
+        map4 = L.map("map4").setView([42.3596, -71.0561], 12);
+        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            minZoom: 9,
+            id: 'examples.map-20v6611k'
+        }).addTo(map4);
+
+        map5 = L.map("map5").setView([42.3596, -71.0561],12);
+        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            minZoom: 9,
+            id: 'examples.map-20v6611k'
+        }).addTo(map5);
+
+        L.control.scale().addTo(map);
+        L.control.scale().addTo(map2);
+        L.control.scale().addTo(map3);
+        L.control.scale().addTo(map4);
+        L.control.scale().addTo(map5);
 
 
         //Public Transit On OFF Difference Maps
         street_viz = new StreetMapVis("map");
-        //
+        //Access Map Stuff
+        current = null;
+        access = accessUnits.auto;
+        access_viz = new AccessVis(d3.select("#map2"), "Access");
+        //Asset Map
+        asset_map_viz = new AssetMapVis();
+        group_char_viz = new GroupChartVis("#context");
+        //Spider Map
+        spider_viz = new SpiderViz(map4);
+        traffic_map = new TopoStreetMapVis(map5, nets.n0)
 
-//
-//        //Asset Charts 1-4
-        asset_viz = new AssetVis(d3.select("#chart"), jobs, "Jobs");
-        asset_viz2 = new AssetVis(d3.select("#chart1"), pop,  "Pop");
-        asset_viz3 = new AssetVis(d3.select("#chart2"), hh, "hh");
-        asset_viz4 = new AssetVis(d3.select("#chart3"), tazarea, "Taz Area Meters Sq.");
-        var asset_map_viz;
-        group_char_vix = new GroupChartVis("#context")
     }
 
+    //Listeners & Interaction
     $(document).ready(function() {
-        $(".btn-primary").click(function(){
-            console.log(this)
-        });
-    });
+        $(".AssetSelect").on("click", function (e) {
+            var check = e.target.innerText;
+            console.log("CHECK", check);
+            if (check !== "Highway" && check !== "Transit") {
+                if (check === "Highway Exits") {
+                    asset_map_viz.updateLayers("exits")
+                } else if (check === "Bus Stops") {
+                    asset_map_viz.updateLayers("busStops")
+                } else if (check === "Roads") {
+                    asset_map_viz.updateLayers("roads")
+                } else if (check === "T-Lines") {
+                    asset_map_viz.updateLayers("T_Lines")
+                } else if (check === "T-Stops") {
+                    asset_map_viz.updateLayers("T_Stops")
+                } else if (check === "Bus Lines") {
+                    asset_map_viz.updateLayers("busLines")
+                }
 
-    $(document).ready(function() {
-        $("#dropDown").on("change", function(){
-            if (currentMap !== this.value){
-                if (currentMap === "Transit"){
-                    map.removeLayer(street_viz.TransitLines)
+                if (asset_map_viz.Assets.lookUp[check] !== asset_map_viz.Assets.lookUp[asset_map_viz.Assets.selected]) {
+                    d3.selectAll(".littleCharts").remove();
+                    updateSpecialChart(check);
+                    asset_map_viz.Assets.selected = check;
+                    if (asset_map_viz.Assets.lookUp[check] === "Highway") {
+                        asset_map_viz.asset_viz = new LineVis(d3.select("#chart"), exits, "exits");
+                        asset_map_viz.asset_viz1 = new LineVis(d3.select("#chart1"), indRoads, "Roads");
+                    } else if (asset_map_viz.Assets.lookUp[check] === "Transit") {
+                        asset_map_viz.asset_viz = new LineVis(d3.select("#chart"), busStops, "Bus Stops");
+                        asset_map_viz.asset_viz2 = new LineVis(d3.select("#chart1"), T_Stops, "T - Stops");
+                    } else if (check === "Demographics") {
+                        that.asset_viz = new AssetVis(d3.select("#chart"), Demographics.jobs, "Jobs");
+                        that.asset_viz2 = new AssetVis(d3.select("#chart1"), Demographics.pop, "Pop");
+                        that.asset_viz3 = new AssetVis(d3.select("#chart2"), Demographics.hh, "hh");
+                        that.asset_viz4 = new AssetVis(d3.select("#chart3"), Demographics.tazarea, "Taz Area Meters Sq.");
+                        asset_map_viz.updateLayers("taz")
+                    }
                 }
-                else if (currentMap === "Assets"){
-                    map.removeLayer(asset_map_viz.rawTaz)
-                }
-                else if (currentMap === "Volume" || currentMap === "Access" || currentMap === "Lost"){
-                    svg.remove();
-                }
-                d3.select('.displayed').remove();
-                if (this.value === "Transit"){
-                    street_viz = new StreetMapVis("map");
-                } else if (this.value === "Volume"){
-                    topo_street_viz = new TopoStreetMapVis();
-                } else if (this.value === "Access"){
-                    delete access_viz;
-                    current = null;
-                    access = auto;
-                    access_viz = new AccessVis(d3.select("#map"), "Access");
-                } else if (this.value === "Assets"){
-                    asset_map_viz = new AssetMapVis();
-                } else if (this.value === "Lost"){
-                    spider_vis = new SpiderViz("#map")
-                }
-            } else {
-                console.log("no Change")
             }
-            currentMap = this.value;
 
-
-
-            //Leaflet with Volume TopoJSON Road Network
 
         });
     });
 
+    $(document).ready(function(){
+        $("#SpiderSelection").on("click", function(e){
+            d3.select("#theSpiderSVG").remove();
+            d3.select("#theSpiderHist").remove();
+            d3.selectAll(".theSpiderLines").remove();
+            d3.selectAll(".centroids").remove();
+            spider_viz.changeMode(e.target)
+        })
+    });
 
-    function showValue(value){
-        access_viz.showValue(value)
+    $(document).ready(function(){
+        $("#Nettype").on("click", function(e){
+            var check = e.target.innerText;
+            var value = d3.select("#netSlider")[0][0].value;
+
+            var data = nets["n"+ value];
+            var attribute = check === "Volumes" ? "q" : "V";
+            console.log(check, data, value, attribute);
+            e.target.innerText = e.target.innerText === "Volumes" ? "Queues" : "Volumes";
+            e.target.value = e.target.innerText === "Queues" ? "q" : "V";
+            traffic_map.updateVis(data,attribute)
+        })
+    });
+
+    function updateSpecialChart(check){
+        document.getElementById("spNormal").value = 0;
+        group_char_viz.transitionVis();
+        var viz = asset_map_viz.Assets.lookUp[check];
+        console.log("VIZ", viz)
+        if (viz === "Highway") {
+            group_char_viz.wrangleData(Demographics.groads)
+        } else if (viz === "Transit") {
+            group_char_viz.wrangleData(Demographics.gtlines)
+        } else {
+            group_char_viz.wrangleData(Demographics.gjobs)
+
+        }
     }
+
+    //Water Layers For Many of the Views
+    function addWater(level, theMap){
+        if (level > 0){
+            if (waterLayer !== null){
+                theMap.removeLayer(waterLayer);
+            }
+            waterLayer = L.geoJson(water["water"+level], {
+                style: styles.waterStyle,
+                onEachFeature: null
+            }).addTo(theMap);
+
+        } else {
+            if (waterLayer !== null)  theMap.removeLayer(waterLayer);
+        }
+    }
+
+
+
+    //Slider
+    function showValue(value, sliderViz){
+        console.log(value, sliderViz);
+        document.getElementById(sliderViz + "range").innerHTML = value + "ft";
+        if (sliderViz === "Access"){
+            access_viz.showValue(value)
+        } else if (sliderViz === "Net" ){
+            var value = d3.select("#netSlider")[0][0].value;
+            var attribute = d3.select("#Nettype")[0][0].value;
+            console.log(attribute, "ATTR")
+            var data = nets["n"+value];
+            traffic_map.updateVis(data, attribute)
+        } else if (sliderViz === "Asset" ){
+            console.log("Selected Asset", asset_map_viz.Assets.selected)
+            if (value === "0"){
+                d3.selectAll("rect.assetBar").classed("desaturate", false);
+            } else {
+                d3.selectAll("rect.assetBar").classed("desaturate", true);
+                d3.selectAll("rect.s" + (value-1) + ".assetBar").classed("desaturate", false);
+            }
+            theMap = sliderViz  === "Asset" ? map3 : sliderViz === "Transit" ? map : sliderViz === "Access" ? map2: null;
+            addWater(value, theMap)
+
+            assetsGlobals.highlightSlrFeatures(+value);
+
+
+        }
+    }
+
+    function normalSpecial(){
+        var currentVal = +document.getElementById("spNormal").value;
+        currentVal += 1;
+        document.getElementById("spNormal").value = currentVal;
+        console.log("normal special fired");
+        group_char_viz.updateVis(true, currentVal);
+    }
+
+    function normalCharts(){
+        asset_map_viz.asset_viz.normalize();
+        asset_map_viz.asset_viz2.normalize();
+        asset_map_viz.asset_viz3.normalize();
+        asset_map_viz.asset_viz4.normalize();
+    }
+
 
     //Acceessibility Click
     d3.select("body").selectAll(".Atype").on("click", function(d){
-        that = access_viz;
-        if (this.id === "walk") access = walk;
-        if (this.id === "auto") access = auto;
-        if (this.id === "transit") access = transit;
-        document.getElementById("theSlider").value = "0";
-        document.getElementById("range").innerHTML=  "0ft";
-        that.wrangleData(access,+d3.select("#theSlider").property("value") )
+        var that = access_viz;
+        console.log("In the accses click", this);
+        if ( this.innerText === "Cutoff Measure" || this.innerText === "Gamma Measure"){
+            if (this.innerText === "Cutoff Measure") {
+                this.innerText = "Gamma Measure";
+                accessUnits.method = "g";
+            } else if (this.innerText === "Gamma Measure") {
+                this.innerText = "Cutoff Measure";
+                accessUnits.method = "";
+            }
+            access = accessUnits[accessUnits.method + accessUnits.mode];
+            that.wrangleData(access,+d3.select("#AccessSlider").property("value") )
+        }
+        else {
+            if (this.innerText === "Walk") access = accessUnits[accessUnits.method+"walk"];
+            if (this.innerText === "Auto") access = accessUnits[accessUnits.method+"auto"];
+            if (this.innerText === "Transit") access = accessUnits[accessUnits.method+"transit"];
+            accessUnits.mode = this.innerText.toLowerCase();
+            document.getElementById("AccessSlider").value = "0";
+            document.getElementById("Accessrange").innerHTML=  "0ft";
+            that.wrangleData(access,+d3.select("#AccessSlider").property("value") )
+        }
     });
+
+
+
 
 </script>

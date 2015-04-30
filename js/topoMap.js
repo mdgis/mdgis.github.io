@@ -27,10 +27,10 @@ TopoStreetMapVis.prototype.updateVis = function(collection, netAttribute) {
         .range([1,scaleMax]);
 
     var feature = that.gTopoMap.selectAll("path")
-        .data(topojson.feature(collection, collection.objects['dta']).features)
+        .data(topojson.feature(collection, collection.objects['dta']).features);
 
     feature
-        .enter().append("path")
+        .enter().append("path");
 
 
 

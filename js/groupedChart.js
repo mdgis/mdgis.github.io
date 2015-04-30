@@ -2,15 +2,15 @@
 
 GroupChartVis = function(_parentElement){
     this.parentElement = _parentElement;
-    this.margin = {top: 20, right: 0, bottom: 30, left: 50},
-        this.width = 600 - this.margin.left - this.margin.right,
-        this.height = 400 - this.margin.top - this.margin.bottom;
+    this.margin = {top: 20, right: 0, bottom: 30, left: 50};
+    this.width = 600 - this.margin.left - this.margin.right;
+    this.height = 400 - this.margin.top - this.margin.bottom;
     this.groupData = null;
     this.initVis();
 };
 
 GroupChartVis.prototype.initVis = function() {
-    that = this;
+    var that = this;
     this.x0 = d3.scale.ordinal()
         .rangeRoundBands([0, that.width], .1);
 
@@ -23,14 +23,12 @@ GroupChartVis.prototype.initVis = function() {
 
     this.xAxis = d3.svg.axis()
         .scale(that.x0)
-        .orient("bottom")
+        .orient("bottom");
 
-        //.tickFormat(function(d){console.log(d)})
-         //.tickValues(["0ft", "1ft", "2ft", "3ft", "4ft","5ft","6ft"])
 
     this.yAxis = d3.svg.axis()
         .scale(that.y)
-        .orient("left")
+        .orient("left");
 
 
     this.svg = d3.select(this.parentElement).append("svg").attr("class","groupedChart")
@@ -60,7 +58,7 @@ GroupChartVis.prototype.initVis = function() {
 };
 
 GroupChartVis.prototype.updateVis = function(normal, normal_I){
-        that = this;
+        var that = this;
         that.x0.domain(that.groupData.map(function (d) {
             return d.Level;
         }));
@@ -118,7 +116,7 @@ GroupChartVis.prototype.updateVis = function(normal, normal_I){
                  that.color(d.Name);
             });
 
-            d3.selectAll(".legend").remove()
+            d3.selectAll(".legend").remove();
             that.legend = that.svg.selectAll(".legend")
                 .data(that.assetSet.slice())
                 .enter().append("g")
@@ -166,7 +164,7 @@ GroupChartVis.prototype.transitionVis = function() {
         .attr("height", function(d) {
             return that.height - that.y(0)
         })
-        .attr("y", that.y(0))
+        .attr("y", that.y(0));
 
 
     d3.selectAll(".slrLevel").remove()
@@ -189,9 +187,9 @@ GroupChartVis.prototype.wrangleData = function(_dataSource){
     var that = this;
     that.groupData = null;
     that.groupData = _dataSource.slice(0,6);
-    that.total = _dataSource[6]
+    that.total = _dataSource[6];
 
-    that.groupData.forEach(function(d,i) {delete that.groupData[i].asset})
+    that.groupData.forEach(function(d,i) {delete that.groupData[i].asset});
 
     that.assetSet = d3.keys(that.groupData[0]).filter(function (key) {
         return key !== "Level" ;

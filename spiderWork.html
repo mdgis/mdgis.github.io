@@ -54,7 +54,7 @@
     var Mtaz
     var links = [];
     function loaded(error, taz, spider) {
-        console.log(taz, spider);
+
 
 
         Mtaz = taz;
@@ -74,7 +74,7 @@
         });
 
         var vMax = d3.max(links, function(d) {return Math.abs(d.val)});
-        console.log("VMAX", vMax)
+
         var vScale = d3.scale.linear()
                 .domain([10,vMax])
                 .range([1,15]);

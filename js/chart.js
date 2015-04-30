@@ -2,7 +2,7 @@
  * AssetVis object for HW3 of CS171
  * @param _parentElement -- the HTML or SVG element (D3 node) to which to attach the vis
  * @param _data -- the data array
- * @param _metaData -- the meta-data / data description object
+ * @param _label -- label for chart
  * @constructor
  */
 
@@ -14,7 +14,7 @@ AssetVis = function(_parentElement, _data, _label){
     this.label = _label;
     this.totalAssets = 0;
     this.denominator = 1;
-    this.baseTicks = [];
+
 
     // define all constants here
     this.margin = {top: 30, right: 50, bottom: 30, left: 80};
@@ -32,6 +32,15 @@ AssetVis.prototype.initVis = function(){
     this.svg = this.parentElement.append("svg")
         .attr("id",this.label.split(" ")[0])
         .attr("class", "littleCharts")
+        .on("click", function(d,i){
+            console.log("Clicked Svg")
+            var level = $("#AssetSlider").val();
+            var dim = this.id;
+            console.log(dim, level)
+            asset_map_viz.Assets.demoDim = dim.toLocaleLowerCase();
+            map3.removeLayer(asset_map_viz.Features);
+            asset_map_viz.wrangleDemData(Demographics[dim.toLocaleLowerCase()], dim.toUpperCase(), level)
+        })
         .attr("width", this.width + this.margin.left + this.margin.right)
         .attr("height", this.height + this.margin.top + this.margin.bottom)
         .append("g")
@@ -85,16 +94,7 @@ AssetVis.prototype.initVis = function(){
         .style("stroke", "white")
         .style("stroke-width", 1)
         .attr("x", function(d,i){ return that.x(i); })
-        .on("click", function(d,i){
-            console.log("CLICKED Chart")
-            d3.selectAll(".assetBar").style("stroke", "white");
-            d3.select(this).style("stroke","black");
 
-            var level = +this.classList[0].slice(1,2)+1
-            var dim = this.classList[2];
-            map3.removeLayer(asset_map_viz.Features);
-            asset_map_viz.wrangleDemData(Demographics[dim.toLocaleLowerCase()], dim.toUpperCase(), level)
-        });
 
     this.svg.append("g")
         .attr("class", "x axis")
@@ -104,35 +104,30 @@ AssetVis.prototype.initVis = function(){
         .attr("class", "y axis");
 
     // filter, aggregate, modify data
-    this.wrangleData(null);
+    this.wrangleData();
 
     // call the update method
     this.updateVis(true);
 };
 
-
-/**
- * Method to wrangle the data. In this case it takes an options object
- * @param _filterFunction - a function that filters data or "null" if none
- */
-AssetVis.prototype.wrangleData= function(_filterFunction){
+AssetVis.prototype.wrangleData= function(){
     // displayData should hold the data which is visualized
     //this.displayData = this.filterAndAggregate(_filterFunction);
     var totals = {};
-    for (key in this.data[0]){
+    for (var key in this.data[0]){
         totals[key] = 0
     }
 
     this.data.forEach(function(d){
-        for (key in d){
+        for (var key in d){
         totals[key] += d[key]}
         });
 
     delete totals["TAZ"];
     this.displayData = [];
-    for (key in totals){this.displayData.push(totals[key])}
-    this.totalAssets = this.displayData[6]
-    this.displayData = this.displayData.slice(0,6)
+    for (var key in totals){this.displayData.push(totals[key])}
+    this.totalAssets = this.displayData[6];
+    this.displayData = this.displayData.slice(0,6);
 
 };
 
@@ -147,7 +142,6 @@ AssetVis.prototype.updateVis = function(first){
     //Get the Sum of all votes
     if (first){
         this.y.domain([0, d3.max(this.displayData, function(d) { return d })]);
-        this.baseTicks = this.y.ticks();
         that = this
     }
 

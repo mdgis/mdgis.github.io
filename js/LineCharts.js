@@ -5,7 +5,7 @@
  * LineVis object for HW3 of CS171
  * @param _parentElement -- the HTML or SVG element (D3 node) to which to attach the vis
  * @param _data -- the data array
- * @param _metaData -- the meta-data / data description object
+ * @param _label -- the meta-data / data description object
  * @constructor
  */
 
@@ -72,43 +72,44 @@ LineVis.prototype.initVis = function() {
         .scale(this.y)
         .orient("left");
 
-    slrCounts = [0, 0, 0, 0, 0, 0, 0];
+    this.slrCounts = [0, 0, 0, 0, 0, 0, 0];
 
     //Count the features that are inundated and populate slrCounts
     //Function should work on any data set passed for a line chart
+    that = this;
     this.data.features.forEach(function (d) {
         var check = +d.properties.slr_lvl;
         if (check === 1) {
-            slrCounts[0] += 1;
-            slrCounts[1] += 1;
-            slrCounts[2] += 1;
-            slrCounts[3] += 1;
-            slrCounts[4] += 1;
-            slrCounts[5] += 1;
+            that.slrCounts[0] += 1;
+            that.slrCounts[1] += 1;
+            that.slrCounts[2] += 1;
+            that.slrCounts[3] += 1;
+            that.slrCounts[4] += 1;
+            that.slrCounts[5] += 1;
         } else if (check === 2) {
-            slrCounts[1] += 1;
-            slrCounts[2] += 1;
-            slrCounts[3] += 1;
-            slrCounts[4] += 1;
-            slrCounts[5] += 1;
+            that.slrCounts[1] += 1;
+            that.slrCounts[2] += 1;
+            that.slrCounts[3] += 1;
+            that.slrCounts[4] += 1;
+            that.slrCounts[5] += 1;
         } else if (check === 3) {
-            slrCounts[2] += 1;
-            slrCounts[3] += 1;
-            slrCounts[4] += 1;
-            slrCounts[5] += 1;
+            that.slrCounts[2] += 1;
+            that.slrCounts[3] += 1;
+            that.slrCounts[4] += 1;
+            that.slrCounts[5] += 1;
         } else if (check === 4) {
-            slrCounts[3] += 1;
-            slrCounts[4] += 1;
-            slrCounts[5] += 1;
+            that.slrCounts[3] += 1;
+            that.slrCounts[4] += 1;
+            that.slrCounts[5] += 1;
         } else if (check === 5) {
-            slrCounts[4] += 1;
-            slrCounts[5] += 1;
+            that.slrCounts[4] += 1;
+            that.slrCounts[5] += 1;
         } else if (check === 6) {
-            slrCounts[5] += 1;
+            that.slrCounts[5] += 1;
         }
-        slrCounts[6] += 1
+        that.slrCounts[6] += 1
     });
-    console.log("SLRCOUNTS", slrCounts);
+    console.log("SLRCOUNTS", that.slrCounts);
     this.svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + this.height + ")");
@@ -116,20 +117,20 @@ LineVis.prototype.initVis = function() {
     this.svg.append("g")
         .attr("class", "y axis");
 
-    this.displayData = d3.zip(d3.range(6), slrCounts);
+    this.displayData = d3.zip(d3.range(6), that.slrCounts);
     this.x.domain(d3.range(6));
     this.updateVis(false)
-}
+};
 
 LineVis.prototype.updateVis = function(normal){
     var that = this;
 
-    if (normal){};
-    that.y.domain([0,d3.max(slrCounts.slice(0,6))]);
+    if (normal){}
+    that.y.domain([0,d3.max(that.slrCounts.slice(0,6))]);
 
     that.svg.append("path")
         .attr("class", "line")
-        .attr("d", that.line(that.displayData))
+        .attr("d", that.line(that.displayData));
 
 
 

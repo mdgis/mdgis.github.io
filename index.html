@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-
     <!-- Add Libraries -->
     <script src="libs/d3/d3.min.js" charset="utf-8"></script>
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
@@ -11,8 +10,7 @@
     <script src="libs/leaflet-0.7.3/leaflet.js"></script>
     <script src="packages/simple_statistics.js"></script>
     <script src="libs/jquery/jquery-ui.js"></script>
-    <script src="libs/csvtotable/js/jquery.csvToTable.js"></script>
-    <script src="libs/stickyHeader/js/jquery.stickytableheaders.min.js"></script>
+
 
     <!-- My Tools -->
     <script src="js/chloroClass.js"></script>
@@ -48,353 +46,440 @@
 
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
     <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="libs/leaflet-0.7.3/leaflet.css" />
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <link rel="stylesheet" href="libs/leaflet-0.7.3/leaflet.css"/>
     <link rel="stylesheet" type="text/css" href="css/mycss.css">
+    <link rel="stylesheet" type="text/css" href="css/sidebar.css">
 
+    <script>
+        $(window).load(function() {
+            // Animate loader off screen
+            $(".se-pre-con").fadeOut("slow");
+        });
 
+        $(document).ready(function(){
 
+            $('ul.tabs li').click(function(){
+                var tab_id = $(this).attr('data-tab');
+
+                $('ul.tabs li').removeClass('current');
+                $('.tab-content').removeClass('current');
+
+                $(this).addClass('current');
+                $("#"+tab_id).addClass('current');
+            });
+
+            $("#menu-toggle").click(function(e) {
+                console.log("fired");
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+        });
+
+    </script>
 </head>
 
 <body>
+<div id="wrapper" class="toggled">
+    <!--BLUR ON LOAD-->
 
-<script>
-    $(document).ready(function(){
 
-        $('ul.tabs li').click(function(){
-            var tab_id = $(this).attr('data-tab');
-
-            $('ul.tabs li').removeClass('current');
-            $('.tab-content').removeClass('current');
-
-            $(this).addClass('current');
-            $("#"+tab_id).addClass('current');
-        })
-
-    })
-</script>
-
-<div class="container">
-    <div class="col-md-12 column" >
-        <h1>Visualizing Inundation Impacts on Transportation Networks</h1>
+    <!--************  THE SIDEBAR ************-->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+                <a href="#">Menu</a>
+            </li>
+            <li>
+                <a href="#assetMaster">Inundated Assets</a>
+            </li>
+            <li>
+                <a href="#ridershipChange">Transit Ridership Change</a>
+            </li>
+            <li>
+                <a href="#AccessSelection">Accessibility Impacts</a>
+            </li>
+            <li>
+                <a href="#lostTrips">Lost Trips</a>
+            </li>
+            <li>
+                <a href="#autoNet">Auto Network</a>
+            </li>
+            <li>
+                <a href="#">Process Book</a>
+            </li>
+            <li>
+                <a href="#" data-toggle="modal" data-target="#accessModal" >Use Video</a>
+            </li>
+        </ul>
     </div>
 
-    <!--This is the top Bar -->
-    <div class="row clearfix">
-        <div class="col-md-12 column" id = "Bar">
-            <h2>Inundated Assets</h2>
-                <div class="btn-group-horizontal btn-group" id = "AssetSelection">
-                    <div class="Btype slider">
-                        <span class = "min"></span><input id="AssetSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value,'Asset')"><span class="max"></span>
-                        <span>Inundation Level :&nbsp;</span>
-                        <span id="Assetrange">0ft</span>
-                    </div>
-                    <button type="button" class="btn btn-default AssetSelect">Demographics</button>
-                    <div class="btn-group-vertical">
-                        <button type="button" class="btn btn-default dropdown-toggle AssetSelect"
-                                data-toggle="dropdown">Highway<span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu AssetSelect" >
-                            <li><a href="#">Roads</a></li>
-                            <li><a href="#">Highway Exits</a></li>
-                        </ul>
-                    </div>
-                    <div class="btn-group-vertical">
-                        <button type="button" class="AssetSelect btn btn-default dropdown-toggle"
-                                data-toggle="dropdown">Transit<span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu AssetSelect">
-                            <li><a href="#">Bus Stops</a></li>
-                            <li><a href="#">Bus Lines</a></li>
-                            <li><a href="#">T-Stops</a></li>
-                            <li><a href="#">T-Lines</a></li>
-                        </ul>
+    <!--************ BUTTON FOR SIDEBAR ************-->
+    <div class="col-md-12" style="position: fixed; height: 100px;">
+        <p>
+            <a href="#menu-toggle" class="btn btn-default" id="menu-toggle" style="margin-right: 50px">&#9776</a>
+        </p>
+    </div>
+
+    <!--************ EVERYTHING THE SIDEBAR ************-->
+    <div class="se-pre-con">Loading</div>
+
+    <div id="allButMenu">
+    <!--IN HERE IS WHERE THE VIZS LIVE-->
+
+        <!--************ INUNDATED ASSETS ************-->
+        <div class="row clearfix" id="assetMaster">
+            <div class="col-md-12 column" id = "Bar">
+
+
+                <h1>Visualizing Inundation Impacts on Transportation Networks</h1>
+                <h2>Inundated Assets</h2>
+                    <div class="btn-group-horizontal btn-group" id = "AssetSelection">
+                        <div class="Btype slider">
+                            <span class = "min"></span><input id="AssetSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value,'Asset')"><span class="max"></span>
+                            <span>Inundation Level :&nbsp;</span>
+                            <span id="Assetrange">0ft</span>
+                        </div>
+                        <button type="button" class="btn btn-default AssetSelect" id = "AssetDM">Demographics</button>
+                        <div class="btn-group-vertical">
+                            <button type="button" class="btn btn-default dropdown-toggle AssetSelect"
+                                    data-toggle="dropdown" id="AssetHW">Highway<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu AssetSelect" >
+                                <li><a href="#">Roads</a></li>
+                                <li><a href="#">Highway Exits</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group-vertical">
+                            <button type="button" class="AssetSelect btn btn-default dropdown-toggle"
+                                    data-toggle="dropdown" id="AssetTR">Transit<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu AssetSelect">
+                                <li><a href="#">Bus</a></li>
+                                <li><a href="#">The-T</a></li>
+                            </ul>
+                         </div>
+                        <button type="button" class="btn btn-default waterSelect" value = 0 id = "assetWater">Water</button>
+                        <button type="button" class="btn btn-default fillerButton"></button>
+                        <button type="button" class="btn btn-default " data-toggle="modal" data-target="#assetModal">?</button>
                      </div>
-                    <button type="button" class="btn btn-default waterSelect" value = 0 id = "assetWater">Water</button>
                  </div>
-             </div>
-        </div>
-    <!--These are the Tabs-->
-    <div class = "row clearfix">
-    <div class="col-lg-6">
-        <div id="map3"></div>
-    </div>
-        <div class="col-lg-6">
-            <div class="tabContainer">
-                <ul class="tabs">
-                    <li class="tab-link-current" data-tab="tab-1">Context</li>
-                    <li class="tab-link" data-tab="tab-2">Charts</li>
-                    <li class="tab-link" data-tab="tab-3">Specifics</li>
-                </ul>
-                <div id="tab-1" class = "tab-content current">
-                    <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
-                </div>
+            </div>
+        <!--These are the Tabs-->
+        <div class = "row clearfix">
+            <div class="col-lg-6"><div id="map3"></div></div>
 
-                <div id="tab-2" class="tab-content">
-                    <p><strong>Click Chart to View Different Asset &nbsp;&nbsp;&nbsp; </strong>
-                        <button type="button" class="Normal btn btn-default dropdown-toggle" onclick="normalCharts()"> Normalize
-                    </button> </p>
-                    <div class="col-md-6 column">
-                        <div class = "charts" id = "chart"></div>
-                        </div>
-                    <div class="col-md-6 column">
-                        <div class = "charts" id = "chart1"></div>
+            <div class="col-lg-6">
+                <div class="tabContainer">
+                    <ul class="tabs">
+                        <li class="tab-link" data-tab="tab-1">Context</li>
+                        <li class="tab-link-current" data-tab="tab-2">Charts</li>
+                        <li class="tab-link" data-tab="tab-3">Specifics</li>
+                    </ul>
+                    <div id="tab-1" class = "tab-content">
+                        <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
                     </div>
-                    <div class="col-md-6 column">
-                        <div class = "charts" id = "chart2"></div>
-                    </div>
-                    <div class="col-md-6 column">
-                        <div class = "charts" id = "chart3"></div>
-                    </div>
-                </div>
-                <div>
 
-
-                </div>
-                <div id="tab-3" class="tab-content">
-                    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                    <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
-                    <p><strong>Click to see Percentages &nbsp;&nbsp;&nbsp; </strong>
-                        <button type="button" class="Normal btn btn-default dropdown-toggle" id="spNormal" value = 0 onclick="normalSpecial()"> Normalize
+                    <div id="tab-2" class="tab-content current">
+                        <p><strong>Click Chart to View Different Asset &nbsp;&nbsp;&nbsp; </strong>
+                            <button type="button" class="Normal btn btn-default dropdown-toggle" onclick="normalCharts()"> Normalize
                         </button> </p>
-                    <div id = "context"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!------------>
-
-
-    <!--These are the "Some other title paragraphs"-->
-
-    <div class="row clearfix">
-
-        <div class="col-md-12 column">
-            <h2>Transit Ridership Change Given 4ft of Inundation</h2>
-                    <div class="btn-group-horizontal btn-group" id = "TransitSelection">
-                        <button type="button" class="btn btn-default  Ttype">Reset</button>
-                        <button type="button" class="btn btn-default  Ttype">View Water</button>
-                        <button type="button" class="btn btn-default  Ttype">Ridership Increase </button>
-                        <span> &nbsp; Orange Circle = Reduced Boardings  |  Blue Circles = Increased Boardings</span>
+                        <div class="col-md-6 column">
+                            <div class = "charts" id = "chart"></div>
+                            </div>
+                        <div class="col-md-6 column">
+                            <div class = "charts" id = "chart1"></div>
+                        </div>
+                        <div class="col-md-6 column">
+                            <div class = "charts" id = "chart2"></div>
+                        </div>
+                        <div class="col-md-6 column">
+                            <div class = "charts" id = "chart3"></div>
                         </div>
                     </div>
-    </div>
 
-
-
-    <div class="row clearfix">
-
-        <div class="col-md-6 column">
-            <div id="map"></div>
-        </div>
-        <div class="col-md-6 column">
-            <!--Top-->
-            <div id = "masterHead"></div>
-            <!--Holds the Transit Trip Selection Table-->
-
-            <div id="DataSelection">
-            </div>
-
-            <div id="RoutesAtStop" style = "margin-left: 10px;marigin-bottom:30px;border-bottom: 1px solid #000000">
-                <!--Holds the Transit Trip Selection Table-->
-            </div>
-        </div>
-    </div>
-
-    <div class="row clearfix">
-
-        <div class="col-md-12 column intro" >
-
-            <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare orci a finibus pulvinar. Donec dapibus magna a nunc accumsan mattis. Duis eu rhoncus quam. Vestibulum in tortor sed nisl malesuada malesuada. Vivamus sed neque a metus mattis molestie eu ut elit. Sed dignissim id dolor sit amet tristique. Vivamus porttitor nisi auctor aliquet fringilla. Aenean vel nunc ultricies velit pharetra maximus. Integer erat est, porttitor sed tempor nec, mollis ac mi.
-
-                Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-
-                Nam sed diam et urna fermentum luctus et eget magna. Fusce sed nisi tempor, molestie dui eget, interdum eros. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque accumsan lorem finibus velit consectetur, a fermentum risus elementum. Aliquam lobortis enim at tristique maximus. Sed nec porttitor tortor. Aenean vitae metus non eros cursus hendrerit.
-
-                Aliquam erat volutpat. Nullam at mauris lorem. Aliquam tempus nec ligula id suscipit. Nunc elementum nulla a massa euismod, sed ullamcorper orci mollis. Morbi sem arcu, elementum ac dapibus in, tincidunt eu lectus. Nunc lacinia dolor turpis, id efficitur nisl congue condimentum. Praesent ullamcorper molestie nisl, id ornare nunc commodo ut. Donec suscipit tempus ultrices.
-
-                Maecenas eget feugiat justo. Nullam eros erat, suscipit sed turpis ut, tempus pharetra orci. Suspendisse tincidunt nisl a vehicula fermentum. Mauris bibendum orci dictum placerat vulputate. Fusce ut velit pulvinar, sagittis ex ac, convallis lorem. Duis purus felis, venenatis tristique sollicitudin et, aliquam eget est. Donec egestas odio quis ligula pulvinar, id finibus est sodales. Integer eu semper leo. Maecenas eu lorem vel nunc dapibus ullamcorper. Etiam semper, eros ut ultricies maximus, felis metus aliquam libero, ac efficitur massa sapien eu urna. Nullam vehicula quis tellus tincidunt malesuada. Nulla pulvinar tempus mauris, mollis varius nisl blandit pulvinar. Praesent et porta odio. Sed sit amet volutpat lacus, et hendrerit lorem. Etiam non vestibulum nisl.</p>
-
-
-
-        </div>
-
-        <div class="col-md-12 column">
-            <div class="btn-group-horizontal btn-group" id = "AccessSelection">
-                <h2>Accessibility Impacts</h2>
-                <div class="Btype slider">
-                    <span></span><input id="AccessSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value, 'Access')"><span></span>
-                    <span>Inundation Level :&nbsp;</span>
-                    <span id="Accessrange">0ft</span>
+                    <div id="tab-3" class="tab-content">
+                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+                        <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+                        <p><strong>Click to see Percentages &nbsp;&nbsp;&nbsp; </strong>
+                            <button type="button" class="Normal btn btn-default dropdown-toggle" id="spNormal" value = 0 onclick="normalSpecial()"> Normalize
+                            </button> </p>
+                        <div id = "context"></div>
+                    </div>
                 </div>
-
-                <button type="button" class="btn btn-default  Atype">Auto</button>
-                <button type="button" class="btn btn-default  Atype">Transit</button>
-                <button type="button" class="btn btn-default Atype">Walk</button>
-                <button type="button" id ="accessMethod" class="btn btn-default Atype">Cutoff Measure</button>
-
             </div>
-
         </div>
-            <!--Accessibility Map-->
+
+        <!--*************************** TRANSIT RIDERSHIP CHANGE ***************************-->
+        <div class="row clearfix" id="ridershipChange">
+            <div class="col-md-12 column">
+                <h2>Transit Ridership Change Given 4ft of Inundation</h2>
+                <div class="btn-group-horizontal btn-group" id = "TransitSelection">
+                    <button type="button" class="btn btn-default  Ttype">Reset</button>
+                    <button type="button" class="btn btn-default  Ttype">View Water</button>
+                    <button type="button" class="btn btn-default searchType Ttype" id = "RI">Ridership Increase</button>
+                    <button type="button" class="btn btn-default searchType Ttype" id = "RD">Ridership Decrease</button>
+                    <button type="button" class="btn btn-default fillerButton"></button>
+                    <button type="button" class="btn btn-default " data-toggle="modal" data-target="#transitRidershipModal">?</button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+            <div class="col-md-6 column">
+                <div id="map"></div>
+            </div>
             <div class="col-md-6 column">
                 <!--Top-->
-                <div class="DataSelection" id = Access_DS>
-                    <p>   Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-                        Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                <div id = "masterHead"></div>
+                <!--Holds the Transit Trip Selection Table-->
 
-
-                    </p>
+                <div id="DataSelection">
                 </div>
 
-                <div class = "DataLower">
-                    <div>
+                <div id="RoutesAtStop" style = "margin-left: 10px;margin-bottom:30px;border-bottom: 1px solid #000000">
+                    <!--Holds the Transit Trip Selection Table-->
+                </div>
+            </div>
+        </div>
+        <!--*************************** ACCESSIBILITY CHANGE ***************************-->
+        <div class="row clearfix">
+            <div class="col-md-12 column intro" >
+                <p>
+                   aecenas eget feugiat justo. Nullam eros erat, suscipit sed turpis ut, tempus pharetra orci. Suspendisse tincidunt nisl a vehicula fermentum. Mauris bibendum orci dictum placerat vulputate. Fusce ut velit pulvinar, sagittis ex ac, convallis lorem. Duis purus felis, venenatis tristique sollicitudin et, aliquam eget est. Donec egestas odio quis ligula pulvinar, id finibus est sodales. Integer eu semper leo. Maecenas eu lorem vel nunc dapibus ullamcorper. Etiam semper, eros ut ultricies maximus, felis metus aliquam libero, ac efficitur massa sapien eu urna. Nullam vehicula quis tellus tincidunt malesuada. Nulla pulvinar tempus mauris, mollis varius nisl blandit pulvinar. Praesent et porta odio. Sed sit amet volutpat lacus, et hendrerit lorem. Etiam non vestibulum nisl.
+                </p>
+
+            </div>
+
+            <div class="col-md-12 column">
+                <div class="btn-group-horizontal btn-group" id = "AccessSelection">
+                    <h2>Accessibility To Jobs</h2>
+                    <div class="Btype slider">
+                        <span></span><input id="AccessSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value, 'Access')"><span></span>
+                        <span>Inundation Level :&nbsp;</span>
+                        <span id="Accessrange">0ft</span>
+                    </div>
+
+                    <button type="button" class="btn btn-default  Atype"  id = "AccessA">Auto</button>
+                    <button type="button" class="btn btn-default  Atype" id = "AccessT">Transit</button>
+                    <button type="button" class="btn btn-default Atype" id = "AccessW">Walk</button>
+                    <button type="button" class="btn btn-default fillerButton"></button>
+                    <button type="button" id ="CM" class="btn btn-default accessMethod Atype">Cutoff Measure</button>
+                    <button type="button" id ="GM" class="btn btn-default accessMethod Atype">Gamma Measure</button>
+                    <button type="button" class="btn btn-default fillerButton"></button>
+                    <button type="button" class="btn btn-default "  data-toggle="modal" data-target="#accessModal">?</button>
 
 
+                </div>
+
+            </div>
+                <!--Accessibility Map-->
+                <div class="col-md-6 column">
+                    <!--Top-->
+                    <div class="DataSelection" id = Access_DS>
+                        <p>   Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                            Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+
+
+                        </p>
+                    </div>
+
+                    <div id = "accessHist">
+                        <div>
+
+
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-6 column">
-                <div id="map2"></div>
-            </div>
-
+                <div class="col-md-6 column">
+                    <div id="map2"></div>
+                </div>
 
 
 
-        <!--Spider Map-->
 
-    </div>
+            <!--Spider Map-->
 
+        </div>
 
-        <!--Next Title Area-->
-        <div class =  "row clearfix">
+        <!--*************************** LOST TRIPS CHANGE ***************************-->
+        <div class =  "row clearfix" id="lostTrips">
             <div class="col-md-12 column intro" >
-                <h1>Lost Trips</h1>
-                <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare orci a finibus pulvinar. Donec dapibus magna a nunc accumsan mattis. Duis eu rhoncus quam. Vestibulum in tortor sed nisl malesuada malesuada. Vivamus sed neque a metus mattis molestie eu ut elit. Sed dignissim id dolor sit amet tristique. Vivamus porttitor nisi auctor aliquet fringilla. Aenean vel nunc ultricies velit pharetra maximus. Integer erat est, porttitor sed tempor nec, mollis ac mi.
-
-                    Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-
-                    Nam sed diam et urna fermentum luctus et eget magna. Fusce sed nisi tempor, molestie dui eget, interdum eros. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque accumsan lorem finibus velit consectetur, a fermentum risus elementum. Aliquam lobortis enim at tristique maximus. Sed nec porttitor tortor. Aenean vitae metus non eros cursus hendrerit.
-
-                    Aliquam erat volutpat. Nullam at mauris lorem. Aliquam tempus nec ligula id suscipit. Nunc elementum nulla a massa euismod, sed ullamcorper orci mollis. Morbi sem arcu, elementum ac dapibus in, tincidunt eu lectus. Nunc lacinia dolor turpis, id efficitur nisl congue condimentum. Praesent ullamcorper molestie nisl, id ornare nunc commodo ut. Donec suscipit tempus ultrices.
-
-                    Maecenas eget feugiat justo. Nullam eros erat, suscipit sed turpis ut, tempus pharetra orci. Suspendisse tincidunt nisl a vehicula fermentum. Mauris bibendum orci dictum placerat vulputate. Fusce ut velit pulvinar, sagittis ex ac, convallis lorem. Duis purus felis, venenatis tristique sollicitudin et, aliquam eget est. Donec egestas odio quis ligula pulvinar, id finibus est sodales. Integer eu semper leo. Maecenas eu lorem vel nunc dapibus ullamcorper. Etiam semper, eros ut ultricies maximus, felis metus aliquam libero, ac efficitur massa sapien eu urna. Nullam vehicula quis tellus tincidunt malesuada. Nulla pulvinar tempus mauris, mollis varius nisl blandit pulvinar. Praesent et porta odio. Sed sit amet volutpat lacus, et hendrerit lorem. Etiam non vestibulum nisl.</p>
-
+                <h1>Lost Trips Given 4ft of Inundation</h1>
+                <p>
+                    Many trips can no longer be complteded given inundation of the road and transit networks. Below highilights the origin and destination pairs that lost the most trips. I used a cutoff value of 100 trips. If the total lost trips
+                    between a given Origin and Destination was less than 100 then a line is not drawn. The thickness of the lines indicate the number of lost trips they are further redundantly encoded by color
+                    to make them visually clear.
+                </p>
+                <h3>Click the Buttons to change between Transit | Auto | Total </h3>
             </div>
             <div class="col-md-12 column">
-                <div class="btn-group-horizontal btn-group" id = "SpiderSelection">
-
+                <div class="btn-group-horizontal btn-group" id = "SpiderSelection" class = "containerGroup">
                     <div class="Btype slider">
-                        <span></span><input id="LostSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value, 'Lost')"><span></span>
+                        <span></span><input id="LostSlider" type="range" min=1 max=6 step=1 value=1 oninput="showValue(value, 'Lost')"><span></span>
                         <span>Inundation Level :&nbsp;</span>
-                        <span id="Lostrange">0ft</span>
+                        <span id="Lostrange">1ft</span>
                     </div>
-
-                    <button type="button" class="btn btn-default  Stype">Auto</button>
-                    <button type="button" class="btn btn-default  Stype">Transit</button>
-                    <button type="button" class="btn btn-default Stype">Total</button>
+                    <button type="button" class="btn btn-default  Stype" id = "SpiderA">Auto</button>
+                    <button type="button" class="btn btn-default  Stype" id = "SpiderT">Transit</button>
+                    <button type="button" class="btn btn-default Stype" id  = "SpiderTot">Total</button>
+                    <button type="button" class="btn btn-default fillerButton"></button>
+                    <button type="button" class="btn btn-default " data-toggle="modal" data-target="#lostTripsModal">?</button>
 
                 </div>
-
             </div>
             <!--Spider Map-->
             <div class="col-md-6 column">
-                <!--Top-->
+                <div id="spiderHist"></div>
+                <div class = "DataLower"></div>
+            </div>
+            <div class="col-md-6 column">
+                <div id="map4"></div>
+            </div>
+        </div>
 
-                <div id="spiderHist">
+        <!--*************************** TRAFFIC MAP CHANGE ***************************-->
+        <div class =  "row clearfix" id = "autoNet">
+
+            <div class="col-md-12 column intro" >
+                <h1>Auto Network Impacts</h1>
+                <div class="btn-group-horizontal btn-group" id = "NetSelection">
+                    <div class="Btype slider">
+                        <span></span><input id="netSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value, 'Net')"><span id="netSpan"></span>
+                        <span>Inundation Level :&nbsp;</span>
+                        <span id="Netrange">0ft</span>
+                    </div>
+                    <button type="button" class="btn btn-default netType" id = "netV" value = "V">Volumes</button>
+                    <button type="button" class="btn btn-default netType" id = "netq" value = "q">Queues</button>
+                    <button type="button" class="btn btn-default fillerButton"></button>
+                    <button type="button" class="btn btn-default " data-toggle="modal" data-target="#autoNetModal">?</button>
 
                 </div>
+            </div>
 
-                <div class = "DataLower">
-                    <div>
+            <!--Traffic Volumes Map-->
+            <div class="col-md-6 column">
+                <!--Top-->
+                <div class="DataSelection">
+                    <p>   Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                        Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 column">
+                <div id="map5"></div>
+            </div>
+        </div>
+        <!--END ALL BUT THE MENU-->
+    </div>
 
-
+    <!--*****************************************-->
+    <!--******************MODALS****************-->
+    <!-- Inundated Assets Modal -->
+            <div class="modal fade" id="assetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="assetModalLabel">Inundated Assets</h4>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6 column">
-                <div id="map4">
-            </div>
-
-    </div>
-
-    <!--Traffic Map-->
-    <div class =  "row clearfix">
-        <div class="col-md-12 column intro" >
-            <h1>Auto Network Impacts</h1>
-
-            <div class="btn-group-horizontal btn-group" id = "NetSelection">
-
-                <div class="Btype slider">
-                    <span></span><input id="netSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value, 'Net')"><span id="netSpan"></span>
-                    <span>Inundation Level :&nbsp;</span>
-                    <span id="Netrange">0ft</span>
-                </div>
-
-                <button type="button" class="btn btn-default" id="netType" value = "V">Volumes</button>
-
-
-            </div>
-        </div>
-        <!--Traffic Volumes Map-->
-        <div class="col-md-6 column">
-            <!--Top-->
-            <div class="DataSelection">
-                <p>   Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-                    Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-
-
-                </p>
-            </div>
-
-
-        </div>
-
-        <div class="col-md-6 column">
-            <div id="map5"></div>
-        </div>
-
-    </div>
-            <div class =  "row clearfix">
-                <div id = "testTable" style="height:300px;overflow:auto;">
+            <!-- Transit Ridership Trips Modal -->
+            <div class="modal fade" id="transitRidershipModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Transit Ridership</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h3>Thish is some heading</h3>
+                            <p>Thisis is s some discussions ballahbhajbajhs husdfu sjhbfjs sdj </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+        <!-- Accessibility Trips Modal -->
+        <div class="modal fade" id="accessModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="lostModalLabel">Accessibility Stuff</h4>
+                    </div>
+                    <div class="modal-body">
 
-</div><!-- This closes the map container-->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lost Trips Modal -->
+        <div class="modal fade" id="lostTripsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Lost Trips</h4>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auto Network  Modal -->
+        <div class="modal fade" id="autoNetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Auto Network Stuff</h4>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 </div>
-
 </body>
 
-
 <script>
+    //TODO change all normalized chart axes to percentages
     var test;
     var data;
     var access;
-    var current = null;
     var dta;
-    var currentMap = "Transit";
     var waterLayer = null;
     var lookUp ={};
-    d3.json("data/relabelTransit.json", function(data){
-        data.forEach(function(d){
-            lookUp[d.Raw] = d.CleanName
-        })
-    });
-
-    function distance(lat1, lon1, lat2, lon2) {
-        var R = 6371;
-        var a =
-                0.5 - Math.cos((lat2 - lat1) * Math.PI / 180)/2 +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                (1 - Math.cos((lon2 - lon1) * Math.PI / 180))/2;
-
-        return R * 2 * Math.asin(Math.sqrt(a));
-    }
+    var info = L.control();
 
     queue()
             .defer(d3.json, "data/TazClip.json")
@@ -414,6 +499,13 @@
             .defer(d3.csv, "data/assets/groupTransitLines.csv")
             .await(ready);
 
+    //Load Data for lookup Table used to clean up Transit Route Names
+    d3.json("data/relabelTransit.json", function(data){
+        data.forEach(function(d){
+            lookUp[d.Raw] = d.CleanName
+        })
+    });
+
     var water = {
         "water1": water1,
         "water2": water2,
@@ -432,8 +524,6 @@
         "groads":null,
         "gtlines":null
     };
-
-
 
     var accessUnits = {
       "method": "",
@@ -506,7 +596,6 @@
 
     };
 
-
     function ready(error, theTaz, Qjobs, Qhh, Qpop, Qtazarea, Qauto, Qtransit, Qwalk, QGauto, QGtransit, QGwalk,  Qgrjobs, Qnet0, Qgroads, Qgtlines) {
         data = theTaz;
         accessUnits.auto = Qauto;
@@ -543,14 +632,14 @@
             nets.n4 = Qn4;
             nets.n5 = Qn5;
             nets.n6 = Qn6;
-            console.log("nets Loaded")
         }
 
         //Leaflet Base Maps
         map = L.map("map").setView([42.3596, -71.0561], 12);
-        L.tileLayer('http://{s}.acetate.geoiq.com/tiles/acetate/{z}/{x}/{y}.png', {
+        //'http://{s}.acetate.geoiq.com/tiles/acetate/{z}/{x}/{y}.png'
+        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 18,
-            minZoom: 9,
+            minZoom: 11,
             id: 'examples.map-20v6611k'
         }).addTo(map);
 
@@ -589,11 +678,10 @@
         L.control.scale().addTo(map4);
         L.control.scale().addTo(map5);
 
-
-        //Public Transit On OFF Difference Maps
+        //INITIAL MAPS //
         street_viz = new StreetMapVis("map");
         //Access Map Stuff
-        current = null;
+        assetsGlobals.current = null;
         access = accessUnits.auto;
         access_viz = new AccessVis(d3.select("#map2"), "Access");
         //Asset Map
@@ -601,26 +689,90 @@
         group_char_viz = new GroupChartVis("#context");
         //Spider Map
         spider_viz = new SpiderViz(map4);
-        traffic_map = new TopoStreetMapVis(map5, nets.n0)
+        traffic_map = new NetViz(map5, nets.n0);
 
+        //END READY FUNCTION
     }
 
-    function removeWater(aMap){
-        try {
-            aMap.removeLayer(waterLayer);
-            $("#AssetSlider").val(0);
+    //Slider
+    function showValue(value, sliderViz){
+        $("#" + sliderViz + "range").html(value+"ft");
+        if (sliderViz === "Access"){
+            //Need to clear the brush to prevent odd things from occuring
+            accessVizGlobals.accessBrush().clear();
+            access_viz.showValue(value)
+        } else if (sliderViz === "Net" ){
+            var val = $("#netSlider").val();
+            var data = nets["n"+val];
+            traffic_map.updateVis(data, netVizGlobals.attribute)
+        } else if (sliderViz === "Asset" ){
+            if(asset_map_viz.Assets.selected === "Demographics" )
+            {
+                if (value === "0"){
+                    asset_map_viz.toggleLegend(true);
+                    d3.selectAll("rect.assetBar").classed("desaturate", false);
+                    map3.removeLayer(asset_map_viz.Features);
+                } else {
+                    d3.selectAll("rect.assetBar").classed("desaturate", true);
+                    d3.selectAll("rect.s" + (value-1) + ".assetBar").classed("desaturate", false);
+
+
+                    var dim = asset_map_viz.Assets.demoDim === undefined ? "jobs" : asset_map_viz.Assets.demoDim;
+
+                    map3.removeLayer(asset_map_viz.Features);
+                    asset_map_viz.wrangleDemData(Demographics[dim.toLocaleLowerCase()], dim.toUpperCase(), +value)
+                }
+
+            } else {
+                assetsGlobals.highlightSlrFeatures(+value);
+            }
+            var theMap = sliderViz  === "Asset" ? map3 : sliderViz === "Transit" ? map : sliderViz === "Access" ? map2: null;
+            addWater(value, theMap);
+
+
+        } else if (sliderViz === "Lost") {
+            d3.selectAll(".theSpiderLines").remove();
+            d3.selectAll(".centroids").remove();
+
+            console.log("Current SPider Data",spider_viz.spiderData.current, "Value", value);
+            if (spider_viz.spiderData.current === "auto" && value > 1){
+                spider_viz.loaded(spider_viz.taz, spider_viz.spiderData[spider_viz.spiderData.current + value])
+            } else if (spider_viz.spiderData.current === "auto" && value == 1) {
+                d3.selectAll(".spiderBar").remove();
+            }
+            else {
+                spider_viz.loaded(spider_viz.taz, spider_viz.spiderData[spider_viz.spiderData.current + value])
+            }
+
         }
-        catch(err){}
     }
 
-    //Listeners & Interaction
-    $(document).ready(function() {
+    function updateSpecialChart(check){
+        $("#spNormal").val(0);
+        group_char_viz.transitionVis();
+        if (check === "Highway Exits" || check === "Roads") {
+            group_char_viz.wrangleData(Demographics.groads, groupCharGlobals.label.Highway)
+        } else if (check === "The-T" || check === "Bus") {
+            group_char_viz.wrangleData(Demographics.gtlines, groupCharGlobals.label.Transit)
+        } else {
+            group_char_viz.wrangleData(Demographics.gjobs, groupCharGlobals.label.Demographics)
+
+        }
+    }
+
+    $(document).ready(function(){
+        //Inundated Assets Buttons
         $(".AssetSelect").on("click", function (e) {
+
             var check = e.target.innerText;
 
             if (check !== "Highway" && check !== "Transit") {
+
+                $("#AssetDM").removeClass("selectedButton");
+                $("#AssetHW").removeClass("selectedButton");
+                $("#AssetTR").removeClass("selectedButton");
+
                 asset_map_viz.toggleLegend(true);
-                console.log(check + "_");
                 if (asset_map_viz.Assets.selected !== check){
 
                     var currentValue = asset_map_viz.Assets.selected;
@@ -628,21 +780,19 @@
                     removeWater(map3);
                     asset_map_viz.Assets.demoDim = undefined;
                     asset_map_viz.updateAssetInfo();
-                    console.log("ch", check, "cv", currentValue, asset_map_viz.Assets.selected)
                 }
                 if (check === "Highway Exits") {
-                    asset_map_viz.updateLayers("exits")
-                } else if (check === "Bus Stops") {
-                    asset_map_viz.updateLayers("busStops")
+                    asset_map_viz.updateLayers("exits", "roads");
+                    $("#AssetHW").addClass("selectedButton");
+                } else if (check === "Bus") {
+                    asset_map_viz.updateLayers("busStops","busLines");
+                    $("#AssetTR").addClass("selectedButton");
                 } else if (check === "Roads") {
-                    asset_map_viz.updateLayers("roads")
-                } else if (check === "T-Lines") {
-                    asset_map_viz.updateLayers("T_Lines")
-                } else if (check === "T-Stops") {
-                    asset_map_viz.updateLayers("T_Stops")
-                } else if (check === "Bus Lines") {
-                    asset_map_viz.updateLayers("busLines")
-
+                    asset_map_viz.updateLayers("roads");
+                    $("#AssetHW").addClass("selectedButton");
+                } else if (check === "The-T") {
+                    asset_map_viz.updateLayers("T_Stops","T_Lines");
+                    $("#AssetTR").addClass("selectedButton");
                 }
 
                 if (asset_map_viz.Assets.lookUp[check] !== asset_map_viz.Assets.lookUp[currentValue]) {
@@ -651,82 +801,128 @@
                     updateSpecialChart(check);
 
                     if (asset_map_viz.Assets.lookUp[check] === "Highway") {
-                        asset_map_viz.asset_viz = new LineVis(d3.select("#chart"), exits, "exits");
-                        asset_map_viz.asset_viz1 = new LineVis(d3.select("#chart1"), indRoads, "Roads");
-                    } else if (asset_map_viz.Assets.lookUp[check] === "Transit") {
-                        asset_map_viz.asset_viz = new LineVis(d3.select("#chart"), busStops, "Bus Stops");
-                        asset_map_viz.asset_viz2 = new LineVis(d3.select("#chart1"), T_Stops, "T - Stops");
+                        asset_map_viz.asset_viz = new LineVis(d3.select("#chart"), exits, "Highway Exits",true);
+                        asset_map_viz.asset_viz2 = new LineVis(d3.select("#chart1"), assetsGlobals.roadTotals, "Roads",false);
+                    } else if (check === "Bus" || check === "The-T") {
+                        asset_map_viz.asset_viz = new LineVis(d3.select("#chart"), busStops, "Bus Stops", true);
+                        asset_map_viz.asset_viz2 = new LineVis(d3.select("#chart1"), T_Stops, "T - Stops",true);
+                        asset_map_viz.asset_viz3 = new LineVis(d3.select("#chart2"), assetsGlobals.tLineTotals, "T - Lines Sq.Miles",false);
+                        asset_map_viz.asset_viz4 = new LineVis(d3.select("#chart3"), assetsGlobals.busLineTotals, "Bus Lines Sq.Miles",false);
                     } else if (check === "Demographics") {
+                        $("#AssetDM").addClass("selectedButton");
                         asset_map_viz.asset_viz = new AssetVis(d3.select("#chart"), Demographics.jobs, "Jobs");
                         asset_map_viz.asset_viz2 = new AssetVis(d3.select("#chart1"), Demographics.pop, "Pop");
                         asset_map_viz.asset_viz3 = new AssetVis(d3.select("#chart2"), Demographics.hh, "hh");
                         asset_map_viz.asset_viz4 = new AssetVis(d3.select("#chart3"), Demographics.tazarea, "Taz Area Meters Sq.");
                         asset_map_viz.wrangleDemData(Demographics.jobs, "JOBS", 0)
-// asset_map_viz.updateLayers("taz")
+
                     }
                 }
             }
-
-
         });
-    });
-
-    $(document).ready(function(){
+        $(".waterSelect").on("click", function(e){
+            var check  = e.target;
+            var sliderVal;
+            if (check.id === "assetWater") {
+                sliderVal= $("#AssetSlider").val();
+                assetsGlobals.showWater = !assetsGlobals.showWater;
+                if (!assetsGlobals.showWater){
+                    $("#assetWater").removeClass("selectedButton");
+                    addWater(0,map3)
+                }else {
+                    addWater(sliderVal,map3);
+                    $("#assetWater").addClass("selectedButton");
+                }
+            }
+        });
+        //Lost Trip Buttons
         $("#SpiderSelection").on("click", function(e){
-            d3.select("#theSpiderSVG").remove();
-            d3.select("#theSpiderHist").remove();
-            d3.selectAll(".theSpiderLines").remove();
-            d3.selectAll(".centroids").remove();
-            spider_viz.changeMode(e.target)
-        })
-    });
-
-    $(document).ready(function(){
-        $("#netType").on("click", function(e){
+            if (e.target !== "range" && ["Auto", "Transit", "Total"].indexOf(e.target.innerText) > -1){
+                d3.selectAll(".spiderBar").remove();
+                d3.selectAll(".theSpiderLines").remove();
+                d3.selectAll(".centroids").remove();
+                spider_viz.changeMode(e.target)
+            }
+        });
+        //Road Network Buttons
+        $(".netType").on("click", function(e){
             var check = e.target.innerText;
             var value = $("#netSlider").val();
             var data = nets["n"+ value];
-            var attribute = check === "Volumes" ? "q" : "V";
-            console.log(check, data, value, attribute);
-            e.target.innerText = e.target.innerText === "Volumes" ? "Queues" : "Volumes";
-            e.target.value = e.target.innerText === "Queues" ? "q" : "V";
-            traffic_map.updateVis(data,attribute)
+            netVizGlobals.attribute = check === "Queues" ? "q" : "V";
+            if (netVizGlobals.attribute === "V"){
+                $("#netV").addClass("selectedButton");
+                $("#netq").removeClass("selectedButton");
+            } else{
+                $("#netq").addClass("selectedButton");
+                $("#netV").removeClass("selectedButton");
+            }
+            traffic_map.updateVis(data,netVizGlobals.attribute)
+        });
+        //Acceessibility Buttons
+        $(".Atype").on("click", function(d){
+            var that = access_viz;
+            if ( d.target.innerText === "Cutoff Measure" || d.target.innerText === "Gamma Measure"){
+                if (d.target.innerText === "Cutoff Measure") {
+                    $("#CM").addClass("selectedButton");
+                    $("#GM").removeClass("selectedButton");
+                    accessUnits.method = "";
+                } else if (d.target.innerText === "Gamma Measure") {
+                    $("#GM").addClass("selectedButton");
+                    $("#CM").removeClass("selectedButton");
+                    accessUnits.method = "g";
+                }
+                access = accessUnits[accessUnits.method + accessUnits.mode];
+                that.wrangleData(access,+d3.select("#AccessSlider").property("value") )
+            }
+            else {
+                $("#AccessA").removeClass("selectedButton");
+                $("#AccessT").removeClass("selectedButton");
+                $("#AccessW").removeClass("selectedButton");
+
+                if (d.target.innerText === "Walk") {
+                    $("#AccessW").addClass("selectedButton");
+                    access = accessUnits[accessUnits.method+"walk"];}
+                if (d.target.innerText === "Auto") {
+                    $("#AccessA").addClass("selectedButton");
+                    access = accessUnits[accessUnits.method+"auto"];}
+                if (d.target.innerText === "Transit") {
+                    $("#AccessT").addClass("selectedButton");
+                    access = accessUnits[accessUnits.method+"transit"];}
+
+
+
+                accessUnits.mode = d.target.innerText.toLowerCase();
+                $("#AccessSlider").val(0); //Reset Slider Value to 0
+                $("#Accessrange").text("0ft"); //Reset Text to 0ft
+                that.wrangleData(access,+d3.select("#AccessSlider").property("value") )
+            }
+        });
+        //Transit RiderShip Buttons
+        $('.Ttype').click(function(e){
+            var clicked = e.target.innerText.trim();
+            if (clicked === "Reset"){
+                street_viz.resetVis()
+            } else if (e.target.innerText === "View Water"){
+                street_viz.toggleWater(!StreetMapGlobals.viewWater);
+                StreetMapGlobals.viewWater = !StreetMapGlobals.viewWater;
+            } else if (clicked === 'Ridership Increase' || clicked === "Ridership Decrease"){
+                if (clicked === "Ridership Increase"){
+                    $("#RI").addClass("selectedButton");
+                    $("#RD").removeClass("selectedButton");
+                } else {
+                    $("#RD").addClass("selectedButton");
+                    $("#RI").removeClass("selectedButton");
+                }
+
+                StreetMapGlobals.gainOrLoss = clicked;
+            }
         })
     });
 
-    function updateSpecialChart(check){
-        $("#spNormal").val(0);
-        group_char_viz.transitionVis();
-        var viz = asset_map_viz.Assets.lookUp[check];
-        console.log("VIZ", viz);
-        if (viz === "Highway") {
-            group_char_viz.wrangleData(Demographics.groads)
-        } else if (viz === "Transit") {
-            group_char_viz.wrangleData(Demographics.gtlines)
-        } else {
-            group_char_viz.wrangleData(Demographics.gjobs)
-
-        }
-    }
-
-    $(".waterSelect").on("click", function(e){
-        var check  = e.target;
-        var sliderVal = $("#AssetSlider").val();
-            if (check.id === "assetWater") {
-                assetsGlobals.showWater = !assetsGlobals.showWater;
-                if (!assetsGlobals.showWater){
-                    addWater(0,map3)
-                }else {
-                    console.log("add")
-                    addWater(sliderVal,map3)
-                }
-            }
-
-    });
     //Water Layers For Many of the Views
     function addWater(level, theMap){
         if (theMap === map3 && !assetsGlobals.showWater) {
-            console.log("in here", +$(".waterSelect").val())
             if (waterLayer !== null)  theMap.removeLayer(waterLayer);
         } else {
         if (level > 0){
@@ -744,56 +940,22 @@
         }
     }
 
-
-
-    //Slider
-    function showValue(value, sliderViz){
-        console.log(value, sliderViz);
-        $(sliderViz + "range").html(value+"ft");
-        if (sliderViz === "Access"){
-            access_viz.showValue(value)
-        } else if (sliderViz === "Net" ){
-            var val = $("#netSlider").val();
-            var attribute = $("#netType").val();
-            console.log("NETTUPE", attribute);
-            var data = nets["n"+val];
-            traffic_map.updateVis(data, attribute)
-        } else if (sliderViz === "Asset" ){
-            console.log("Selected Asset", asset_map_viz.Assets.selected);
-                if(asset_map_viz.Assets.selected === "Demographics" )
-                {
-                if (value === "0"){
-                    asset_map_viz.toggleLegend(true);
-                    d3.selectAll("rect.assetBar").classed("desaturate", false);
-                    map3.removeLayer(asset_map_viz.Features);
-                } else {
-                    d3.selectAll("rect.assetBar").classed("desaturate", true);
-                    d3.selectAll("rect.s" + (value-1) + ".assetBar").classed("desaturate", false);
-
-
-                    var dim = asset_map_viz.Assets.demoDim === undefined ? "jobs" : asset_map_viz.Assets.demoDim
-
-                    map3.removeLayer(asset_map_viz.Features);
-                    asset_map_viz.wrangleDemData(Demographics[dim.toLocaleLowerCase()], dim.toUpperCase(), +value)
-                }
-
-            } else {
-                    assetsGlobals.highlightSlrFeatures(+value);
-            }
-            theMap = sliderViz  === "Asset" ? map3 : sliderViz === "Transit" ? map : sliderViz === "Access" ? map2: null;
-            addWater(value, theMap);
-
-
+    function removeWater(aMap){
+        try {
+            aMap.removeLayer(waterLayer);
+            $("#AssetSlider").val(0);
         }
+        catch(err){}
     }
 
     function normalSpecial(){
-        var selected = $("#spNormal");
-        var currentVal = +selected.val();
-        currentVal += 1;
-        selected.val(currentVal);
-        console.log("normal special fired");
-        group_char_viz.updateVis(true, currentVal);
+        groupCharGlobals.normal = !groupCharGlobals.normal
+        if (groupCharGlobals.normal) {
+            d3.select("#groupYlabel").classed("hide", true);  //If normalized then hide axis unti label
+        } else {
+            d3.select("#groupYlabel").classed("hide", false); //Else show the unit label
+        }
+        group_char_viz.updateVis(true, groupCharGlobals.normal);
     }
 
     function normalCharts(){
@@ -804,46 +966,8 @@
     }
 
 
-    //Transit Selection Click
-    $(document).ready(function(){
 
-        $('.Ttype').click(function(e){
-            var clicked = e.target.innerText.trim();
-            console.log(clicked)
-            e.target.innerText = clicked === "Ridership Increase" ? "Ridership Decrease" :
-                    clicked ===  "Ridership Decrease"  ? "Ridership Increase" : clicked;
-            if (clicked === "Reset"){
-                street_viz.resetVis()
-            }
-        })
 
-    });
-
-    //Acceessibility Click
-    d3.select("body").selectAll(".Atype").on("click", function(d){
-        var that = access_viz;
-        console.log("In the accses click", this);
-        if ( this.innerText === "Cutoff Measure" || this.innerText === "Gamma Measure"){
-            if (this.innerText === "Cutoff Measure") {
-                this.innerText = "Gamma Measure";
-                accessUnits.method = "g";
-            } else if (this.innerText === "Gamma Measure") {
-                this.innerText = "Cutoff Measure";
-                accessUnits.method = "";
-            }
-            access = accessUnits[accessUnits.method + accessUnits.mode];
-            that.wrangleData(access,+d3.select("#AccessSlider").property("value") )
-        }
-        else {
-            if (this.innerText === "Walk") access = accessUnits[accessUnits.method+"walk"];
-            if (this.innerText === "Auto") access = accessUnits[accessUnits.method+"auto"];
-            if (this.innerText === "Transit") access = accessUnits[accessUnits.method+"transit"];
-            accessUnits.mode = this.innerText.toLowerCase();
-            $("#AccessSlider").val(0); //Reset Slider Value to 0
-            $("#Accessrange").text("0ft"); //Reset Text to 0ft
-            that.wrangleData(access,+d3.select("#AccessSlider").property("value") )
-        }
-    });
 
 
 

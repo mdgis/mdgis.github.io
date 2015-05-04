@@ -1,7 +1,6 @@
-//TODO need to add legend
-//TODO need to add button that clears the selection
-
 var StreetMapGlobals ={
+    "gainOrLoss": "Ridership Increase",
+    "viewWater":false,
     "rootNodes": {},
     "gainScale": null,
     "lossScale": null,
@@ -15,8 +14,7 @@ var StreetMapGlobals ={
             }
         })
      },
-    "updateThePoints" : function(route){
-        //console.log("in the update points", route+"_");
+    "updateThePoints" : function(route, searchType){
         if (+route.slice(0,1)) route = String(Math.floor(+route));
         route = route.trim();
         var routeNodes=[];
@@ -26,7 +24,6 @@ var StreetMapGlobals ={
 
             allNodes.each(function(d){
                 var check1 = StreetMapGlobals.rootNodes[d.properties["A_1"]] !== undefined;
-                console.log(route,"Route");
                 var check2 = Object.keys(StreetMapGlobals.rootNodes[d.properties.A_1].Lines).indexOf(route) > -1;
                 if (check1 && check2){
                     routeNodes.push({"A":d.properties.A_1, "lat":d.LatLng.lat, "lng": d.LatLng.lng })
@@ -39,7 +36,8 @@ var StreetMapGlobals ={
 
                 if (check1  && check2 ) {
                     var check = StreetMapGlobals.rootNodes[d.properties["A_1"]].Total;
-                    if (check > 100) {
+                    //If visualizing nodes that had increases near a route
+                    if (check > 100 && searchType === "Ridership Increase") {
                         for (var i = 0; i<routeNodes.length; i++){
                             var dist  = distance(routeNodes[i].lat,routeNodes[i].lng,d.LatLng.lat, d.LatLng.lng ) ;
                             if (dist < 1){
@@ -51,7 +49,21 @@ var StreetMapGlobals ={
                                 }
                             }
                         }
-                    } else {
+                        //If visualizing nodes that decreases near a route
+                    } else if (check < -100 && searchType === "Ridership Decrease"){
+                        for (var i = 0; i<routeNodes.length; i++){
+                            dist  = distance(routeNodes[i].lat,routeNodes[i].lng,d.LatLng.lat, d.LatLng.lng ) ;
+                            if (dist < 1){
+                                nearGainNodes.push({"A":d.properties.A_1});
+                                break
+                            } else {
+                                if(i === routeNodes.length -1){
+                                    ignoreNodes.push(d.properties.A_1)
+                                }
+                            }
+                        }
+                    }
+                    else {
                         ignoreNodes.push(d.properties.A_1)
                     }
                 }
@@ -62,8 +74,8 @@ var StreetMapGlobals ={
                     d3.select(nodeClass).transition().duration(2000)
                         .attr("r", function(d) {
                                 var check = StreetMapGlobals.rootNodes[d.properties["A_1"]].Total;
-                                return check > 200 ? StreetMapGlobals.gainScale(check)*1.5:
-                                    check < -50 ? StreetMapGlobals.lossScale(Math.abs(check))*1.5:
+                                return check > 200 ? StreetMapGlobals.gainScale(check):
+                                    check < -50 ? StreetMapGlobals.lossScale(Math.abs(check)):
                                         check === 0 ? 0 : 0})
             }
         );
@@ -80,7 +92,7 @@ var StreetMapGlobals ={
                 d3.select(nodeClass).transition().duration(2500)
                     .attr("r", function(d) {
                         var check = StreetMapGlobals.rootNodes[d.properties["A_1"]].Total;
-                        return StreetMapGlobals.gainScale(check)*1.5;
+                        return StreetMapGlobals.gainScale(Math.abs(check));
                         });
             }
         );
@@ -88,6 +100,16 @@ var StreetMapGlobals ={
         if (routeNodes.length === 0) {allNodes.attr("r", 0)}
     }
 };
+
+function distance(lat1, lon1, lat2, lon2) {
+    var R = 6371;
+    var a =
+        0.5 - Math.cos((lat2 - lat1) * Math.PI / 180)/2 +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        (1 - Math.cos((lon2 - lon1) * Math.PI / 180))/2;
+
+    return R * 2 * Math.asin(Math.sqrt(a));
+}
 
 //Node Processing - Outputs Nested JSON saying which transit line is at which Transit Stop
 d3.tsv("RawData/PtOnOff.csv", function(data){
@@ -105,8 +127,6 @@ d3.tsv("RawData/PtOnOff.csv", function(data){
         StreetMapGlobals.rootNodes[d.A].Total += +d.DiffB4ft;
     });
 });
-
-
 
 StreetMapVis = function(){
     this.initVis();
@@ -127,17 +147,16 @@ StreetMapVis = function(){
         var tableData = data;
         // render the table
         var peopleTable = tabulate(data, ["Route","Mode","Base Ridership", "4ft Ridership","Difference"]);
-        $('table').stickyTableHeaders();
+
     });
 
     function sortTable(h){
-        console.log("sorting or not", h);
         sorts.direction += 1;
         var method=null;
         d3.select("#fullTable").selectAll(".tableRows").sort(function(a,b){
             if (h === "Route") {
-                return sorts.direction % 2 === 0 && sorts.current === h ? d3.descending(a[h], b[h]) :
-                    d3.ascending(a[h], b[h])
+                return sorts.direction % 2 === 0 && sorts.current === h ? naturalCompare(a[h], b[h]) :
+                    naturalCompare(b[h], a[h])
             } else {
                 return sorts.direction % 2 === 0 && sorts.current === h ? a[h]-b[h] : b[h]-a[h]
 
@@ -147,7 +166,25 @@ StreetMapVis = function(){
         sorts.current = h;
     }
 
+    //below source: http://stackoverflow.com/questions/15478954/sort-array-elements-string-with-numbers-natural-sort
+    function naturalCompare(a, b) {
+        var ax = [], bx = [];
+
+        a.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { ax.push([$1 || Infinity, $2 || ""]) });
+        b.replace(/(\d+)|(\D+)/g, function(_, $1, $2) { bx.push([$1 || Infinity, $2 || ""]) });
+
+        while(ax.length && bx.length) {
+            var an = ax.shift();
+            var bn = bx.shift();
+            var nn = (an[0] - bn[0]) || an[1].localeCompare(bn[1]);
+            if(nn) return nn;
+        }
+
+        return ax.length - bx.length;
+    }
     function tabulate(data, columns) {
+        var that = street_viz;
+
         var table = d3.select("#DataSelection").append("table")
                 .attr("id","fullTable")
                 .attr("style", "margin-left: 250px")
@@ -157,7 +194,7 @@ StreetMapVis = function(){
         var masterHead = d3.select("#masterHead").append("table")
                 .attr("style", "margin-left: 250px")
                 .attr("class", "TransitSelector"),
-            Mthead = masterHead.append("thead")
+            Mthead = masterHead.append("thead");
 
         // append the header row
         Mthead.append("tr")
@@ -166,7 +203,6 @@ StreetMapVis = function(){
             .enter()
             .append("th")
             .on("click",function(d){
-                console.log("CLICK", d)
                 sortTable(d)
             })
             .attr("class", function(d){
@@ -181,9 +217,9 @@ StreetMapVis = function(){
             .enter()
             .append("tr")
             .on("click", function(d){
-                console.log(d)
+                street_viz.updateAssetInfo(d.Route);
                 StreetMapGlobals.selectTransitLine(d.Route);
-                StreetMapGlobals.updateThePoints(d.Route);
+                StreetMapGlobals.updateThePoints(d.Route,StreetMapGlobals.gainOrLoss);
             })
             .attr("class","tableRows");
 
@@ -197,29 +233,41 @@ StreetMapVis = function(){
             .enter()
             .append("td")
             .html(function(d) {
-                return d.column === "Mode" ? modeLookup[d.value] :
-                    d.column === "Route" ? d.value:
-                        commaFormat(Math.round(d.value));
+                if ( d.column === "Mode" ){
+                    return modeLookup[d.value]
+                } else if (d.column === "Route"){
+                    if (!isNaN(+d.value.slice(0,2))) {
+                        return Math.floor(+d.value)
+                    } else {
+                        return d.value
+                    }
+                } else {
+                    return commaFormat(Math.round(d.value))
+                }
             });
-
         return table;
-
-
-
     }
-
 };
-
-
 
 StreetMapVis.prototype.initVis = function(){
     var that = this;
+    $("#RI").addClass("selectedButton");
+
+
     this.TransitLines = L.geoJson(transitLines, {
         style: styles.transitStyle,
         onEachFeature: null
     }).addTo(map);
 
     map._initPathRoot();
+
+    var Tlegend = L.control( { position: 'bottomright' } );
+    Tlegend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'tranistLegend');
+
+        return div
+    };
+    Tlegend.addTo(map);
 
     //We pick up the SVG from the map object
     this.svg = d3.select("#map").select("svg");
@@ -241,11 +289,11 @@ StreetMapVis.prototype.initVis = function(){
 
         StreetMapGlobals.gainScale = d3.scale.sqrt()
                 .domain([0,that.extent[1]])
-                .range([1,20]);
+                .range([1,30]);
 
         StreetMapGlobals.lossScale = d3.scale.sqrt()
-            .domain([0, Math.abs(that.extent[0])])
-            .range([1,20]);
+            .domain([0, d3.max([Math.abs(that.extent[0]), that.extent[1]])])
+            .range([1,30]);
 
         collection.features.forEach(function(d) {
             d.LatLng = new L.LatLng(d.geometry.coordinates[1], d.geometry.coordinates[0])
@@ -262,7 +310,7 @@ StreetMapVis.prototype.initVis = function(){
             })
             .attr("r", function(d) {
                 if (StreetMapGlobals.rootNodes[d.properties["A_1"]] !== undefined){
-                    check = StreetMapGlobals.rootNodes[d.properties["A_1"]].Total
+                    var check = StreetMapGlobals.rootNodes[d.properties["A_1"]].Total;
 
                 return check > 200 ? StreetMapGlobals.gainScale(check) :
                             check < -50 ? StreetMapGlobals.lossScale(Math.abs(check)) :
@@ -294,33 +342,34 @@ StreetMapVis.prototype.initVis = function(){
             var point = map.latLngToLayerPoint(new L.LatLng(y, x));
             this.stream.point(point.x, point.y);
         }
-
+        that.addLegend()
     });
+
 };
 
 StreetMapVis.prototype.resetVis = function(){
     var that = this;
+    $(".streetInfo").remove();
     that.g.selectAll("circle")
         .transition().duration(1000)
         .attr("r", function(d) {
             if (StreetMapGlobals.rootNodes[d.properties["A_1"]] !== undefined){
-                check = StreetMapGlobals.rootNodes[d.properties["A_1"]].Total
+                var check = StreetMapGlobals.rootNodes[d.properties["A_1"]].Total;
 
                 return check > 200 ? StreetMapGlobals.gainScale(check) :
                     check < -50 ? StreetMapGlobals.lossScale(Math.abs(check)) :
                         check === 0 ? 0 : 0}
-        })
+        });
     that.TransitLines.eachLayer(function(layer){
         layer.setStyle(styles.transitStyle(layer.feature))
-    })
+    });
+    that.resetPie();
 
 };
 
-
-
 StreetMapVis.prototype.LinesAtStop = function(data){
     var that = this;
-    that.pieRadius = 80;
+    that.pieRadius = 90;
     that.pieWidth = 550;
     that.pieHeight = 250;
     that.pieLabelr = that.pieRadius+10;
@@ -342,13 +391,13 @@ StreetMapVis.prototype.LinesAtStop = function(data){
 
     that.arc = d3.svg.arc()
         .outerRadius(that.pieRadius - 10)
-        .innerRadius(80);
+        .innerRadius(60);
 
     that.piePath = that.routeStopSVG.selectAll("arc")
         .data(that.pie(that.pieData))
         .enter().append("path")
-        .attr("fill", "black")
-        .attr("stroke", "white")
+        .attr("fill", "white")
+        .attr("stroke", "black")
         .attr("d", that.arc)
         .each(function(d) { this._current = d; }); // store the initial angles
 
@@ -366,28 +415,36 @@ StreetMapVis.prototype.LinesAtStop = function(data){
                 (y/h * that.pieLabelr) +  ")";
         })
         .attr("dy", ".35em")
-        .attr("text-anchor", function(j) {
-            // are we past the center?
-            return (d.endAngle + d.startAngle)/2 > Math.PI ?
-                "end" : "start";
-        })
-        .text(function(j, i) {
-            if (i === 1) return "Click circle to display routes at that stop" });
+
     })
 
+};
+
+StreetMapVis.prototype.resetPie = function() {
+    var that = street_viz;
+    that.pieData = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0];
+    d3.selectAll(".pieText").remove();
+    that.piePath = that.piePath.data(that.pie(that.pieData)); // compute the new angles
+    that.piePath
+        .style("fill", function (d, i) {
+            return i === 0 ? "white" : i === 1 ? "white" : null;
+        })
+        .style("stroke", "black")
+        .style("opacity", 0.5)
+        .transition().duration(150).attrTween("d", arcTween); // redraw the arcs
 };
 
 StreetMapVis.prototype.UpdateLinesAtStop = function(selectedRouteData){
     var that = street_viz;
     that.pieData = [0,0,0,1,0,0,0,0,0,0];
 
-    console.log(selectedRouteData);
     that.piePath = that.piePath.data(that.pie(that.pieData)); // compute the new angles
     that.piePath
         .style("fill", function(d,i){
-            return i === 0 ? "black" : i===1 ? "#400000" : null;
+            return i === 0 ? "white" : i===1 ? "white" : null;
         })
         .style("stroke", "black")
+        .style("opacity", 0.5)
         .transition().duration(150).attrTween("d", arcTween); // redraw the arcs
 
 
@@ -410,7 +467,7 @@ StreetMapVis.prototype.UpdateLinesAtStop = function(selectedRouteData){
         that.piePath = that.piePath.data(that.pie(that.pieData)); // compute the new angles
         that.piePath
             .style("fill", function (d, i) {
-                return +selectedRouteData[routes[i]] < 0 ? "#700000" : d.data > 0 ? "steelBlue" : "none";
+                return +selectedRouteData[routes[i]] < 0 ? "orange" : d.data > 0 ? "Blue" : "none";
             })
             .style("stroke", "white")
             .transition().duration(750).attrTween("d", arcTween); // redraw the arcs
@@ -443,6 +500,7 @@ StreetMapVis.prototype.UpdateLinesAtStop = function(selectedRouteData){
                         }
                     })
                 }
+            setTimeout(that.resetPie, 60000)
         });
 
         that.routeStopSVG.append("text")
@@ -479,3 +537,103 @@ function arcTween(a) {
         return that.arc(i(t));
     };
 }
+
+StreetMapVis.prototype.addLegend = function() {
+    var that = this;
+    //d3.selectAll(".accessLegendRect").remove();
+    d3.selectAll(".transitLegendSVG").remove();
+    var legendData = [500,15000,30000];
+    //var legendData = [{loss:20000,goin:0},{loss:10000,gain:0},{loss:500,gain:0}]
+    var legendHeight = 170;
+
+    var legend = d3.select("div.tranistLegend")
+        .append("svg")
+        .attr("class","transitLegendSVG")
+        .attr("width",100)
+        .attr("height",legendHeight)
+        .append("g")
+        .attr("transform", "translate(0," + (legendHeight-20) + ")")
+        .selectAll("g.transitLegend")
+        .data(legendData.reverse())
+        .enter()
+        .append("g")
+        .attr("class", "transitLegend");
+
+    var ls_w = 30;
+    var initial = 0;
+    var xOffset = 43;
+    legend.append("circle")
+        .attr("class","transitLossCircle")
+        .attr("r", function(d) {
+            return StreetMapGlobals.lossScale(d)
+
+        })
+        .attr("cx", xOffset)
+        .attr("cy", function(d){
+
+            return -StreetMapGlobals.lossScale(d)
+        })
+        .style("stroke", "white")
+        .style("stroke-width",2)
+        .style("fill", "orange")
+        .style("opacity", 0.5);
+
+    legend.append("circle")
+        .attr("class","transitGainCircle")
+        .attr("r", function(d) {
+            return StreetMapGlobals.lossScale(d)
+
+        })
+        .attr("cx", xOffset)
+        .attr("cy", function(d){
+
+            return -StreetMapGlobals.lossScale(d) - legendHeight/2 +10
+        })
+        .style("stroke", "white")
+        .style("stroke-width", 2)
+        .style("fill", "blue")
+        .style("opacity", 0.5);
+
+    legend.append("text")
+        .attr("x", xOffset)
+        .attr("y", -legendHeight+30)
+        .attr('text-anchor', 'middle')
+        .text("Increased");
+
+    legend.append("text")
+        .attr("x", xOffset)
+        .attr("y", -legendHeight/2+22)
+        .attr('text-anchor', 'middle')
+        .text("Decreased");
+
+};
+
+StreetMapVis.prototype.updateAssetInfo = function(route){
+    var that = this;
+    $(".streetInfo").remove();
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'streetInfo');
+        this.update(route);
+        return this._div;
+    };
+
+    //Control FLow for Labels - sort of a mess but running out of time.
+
+    info.update = function (asset) {
+        this._div.innerHTML = '<h4>' + asset + '</h4>'
+    };
+    info.addTo(map);
+
+
+};
+
+StreetMapVis.prototype.toggleWater = function(bool){
+    var that = this;
+    if (bool){
+        addWater(4,map)
+    } else {
+        addWater(0,map)
+    }
+
+};
+

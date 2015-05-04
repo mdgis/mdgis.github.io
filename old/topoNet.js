@@ -20,7 +20,7 @@ NetVis = function(_parentElement){
 
 
 NetVis.prototype.initVis = function() {
-    that = this;
+    var that = this;
 
 // find the top left and bottom right of current projection
     this.path = d3.geo.path()
@@ -43,7 +43,7 @@ this.updateVis()
 
 
 NetVis.prototype.zoomed = function() {
-    that = net_viz;
+    var that = net_viz;
     console.log(that.projection);
     that.projection.translate(d3.event.translate).scale(d3.event.scale);
     that.g.selectAll("path").attr("d", that.path);
@@ -51,7 +51,7 @@ NetVis.prototype.zoomed = function() {
 
 
 NetVis.prototype.updateVis = function(){
-    that = this;
+    var that = this;
 
     console.log("in update")
    //Is it transit, auto, or walk

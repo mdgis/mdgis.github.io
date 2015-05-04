@@ -293,7 +293,7 @@ tr[class = tableRows ]:hover{
     border-left: 2px solid red;
 }
 
-.info, .assetLegend, .accessLegend{
+.info, .streetInfo, .assetLegend, .accessLegend, .tranistLegend{
     padding: 6px 8px;
     font: 14px/16px Arial, Helvetica, sans-serif;
     background: white;
@@ -302,7 +302,58 @@ tr[class = tableRows ]:hover{
     border-radius: 5px;
 }
 
-.assetLegend, .accessLegend{
+.assetLegend, .accessLegend, .tranistLegend{
     height: 200px;
     width: 100px;
+}
+
+.tranistLegend{
+    height: 170px;
+}
+
+.tranistLegend text{
+    font-size: 12px;
+}
+
+div.accessTip {
+    position: absolute;
+    text-align: center;
+    width: 60px;
+    height: 28px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: #f5f5f5;
+    border: 0px;
+    border-radius: 8px;
+}
+
+.no-js #loader { display: none;  }
+.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+.se-pre-con {
+    position: fixed;
+    float: right;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background-color: #ffffff;
+    margin-left: 10px;
+    color: #000041;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.selectedButton{
+    border-bottom: 2px solid red;
+}
+
+.fillerButton{
+    border: none;
+    z-index: -1;
+    widows: 5px;
+}
+
+#allButMenu{
+    margin-left: 1%;
 }

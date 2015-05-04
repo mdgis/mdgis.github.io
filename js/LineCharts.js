@@ -9,14 +9,17 @@
  * @constructor
  */
 
-LineVis = function(_parentElement, _data, _label){
+
+LineVis = function(_parentElement, _data, _label,_jsonBool ){
     this.parentElement = _parentElement;
     this.data = _data;
     this.displayData = [];
+    this.normalData = [];
     this.normal = false;
     this.label = _label;
     this.totalAssets = 0;
     this.denominator = 1;
+    this.jsonBool = _jsonBool;
     this.baseTicks = [];
 
     // define all constants here
@@ -77,39 +80,46 @@ LineVis.prototype.initVis = function() {
     //Count the features that are inundated and populate slrCounts
     //Function should work on any data set passed for a line chart
     that = this;
-    this.data.features.forEach(function (d) {
-        var check = +d.properties.slr_lvl;
-        if (check === 1) {
-            that.slrCounts[0] += 1;
-            that.slrCounts[1] += 1;
-            that.slrCounts[2] += 1;
-            that.slrCounts[3] += 1;
-            that.slrCounts[4] += 1;
-            that.slrCounts[5] += 1;
-        } else if (check === 2) {
-            that.slrCounts[1] += 1;
-            that.slrCounts[2] += 1;
-            that.slrCounts[3] += 1;
-            that.slrCounts[4] += 1;
-            that.slrCounts[5] += 1;
-        } else if (check === 3) {
-            that.slrCounts[2] += 1;
-            that.slrCounts[3] += 1;
-            that.slrCounts[4] += 1;
-            that.slrCounts[5] += 1;
-        } else if (check === 4) {
-            that.slrCounts[3] += 1;
-            that.slrCounts[4] += 1;
-            that.slrCounts[5] += 1;
-        } else if (check === 5) {
-            that.slrCounts[4] += 1;
-            that.slrCounts[5] += 1;
-        } else if (check === 6) {
-            that.slrCounts[5] += 1;
-        }
-        that.slrCounts[6] += 1
-    });
-    console.log("SLRCOUNTS", that.slrCounts);
+    if (that.jsonBool){
+        this.data.features.forEach(function (d) {
+            var check = +d.properties.slr_lvl;
+            if (check === 1) {
+                that.slrCounts[0] += 1;
+                that.slrCounts[1] += 1;
+                that.slrCounts[2] += 1;
+                that.slrCounts[3] += 1;
+                that.slrCounts[4] += 1;
+                that.slrCounts[5] += 1;
+            } else if (check === 2) {
+                that.slrCounts[1] += 1;
+                that.slrCounts[2] += 1;
+                that.slrCounts[3] += 1;
+                that.slrCounts[4] += 1;
+                that.slrCounts[5] += 1;
+            } else if (check === 3) {
+                that.slrCounts[2] += 1;
+                that.slrCounts[3] += 1;
+                that.slrCounts[4] += 1;
+                that.slrCounts[5] += 1;
+            } else if (check === 4) {
+                that.slrCounts[3] += 1;
+                that.slrCounts[4] += 1;
+                that.slrCounts[5] += 1;
+            } else if (check === 5) {
+                that.slrCounts[4] += 1;
+                that.slrCounts[5] += 1;
+            } else if (check === 6) {
+                that.slrCounts[5] += 1;
+            }
+            that.slrCounts[6] += 1
+        });
+
+    }
+
+    //If it is simple list data
+    if (!that.jsonBool){that.slrCounts = that.data;}
+
+
     this.svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + this.height + ")");
@@ -120,25 +130,54 @@ LineVis.prototype.initVis = function() {
     this.displayData = d3.zip(d3.range(6), that.slrCounts);
     this.x.domain(d3.range(6));
     this.updateVis(false)
+
+    that.svg.append("path")
+        .attr("class", "line asset")
+        .attr("d", that.line(that.displayData));
 };
 
 LineVis.prototype.updateVis = function(normal){
     var that = this;
 
-    if (normal){}
-    that.y.domain([0,d3.max(that.slrCounts.slice(0,6))]);
+    if (normal){
+        var check = that.slrCounts.slice(0,6);
+        var denominator = that.label === "Bus Stops" ? assetsGlobals.totalBusStops : that.slrCounts.slice(6);
+        that.y.domain(
+            [0,1.1*d3.max(check, function(d){
+                return d/denominator
+            })]);
+    } else {
+        that.y.domain([0,d3.max(that.slrCounts.slice(0,6))]);
+    }
 
-    that.svg.append("path")
-        .attr("class", "line")
-        .attr("d", that.line(that.displayData));
+    console.log(that.label, that.y.domain());
 
 
+    if (normal) {
+        that.normalData  = that.slrCounts.slice(0,6).map(function(d){
+        console.log("d", d, "denom", denominator)
+        return d/denominator})
+
+        that.normalData = d3.zip(d3.range(6), that.normalData);
+
+        console.log("normal data", that.normalData)
+        that.svg.selectAll(".line.asset")
+            .transition().duration(2000)
+            .attr("d", that.line(that.normalData));
+
+    } else {
+        that.svg.selectAll(".line.asset")
+            .transition().duration(2000)
+            .attr("d", that.line(that.displayData));
+
+
+    }
 
     that.yAxis = d3.svg.axis()
         .scale(that.y)
         .orient("left");
 
-    that.svg.select(".y.axis").call(this.yAxis);
+    that.svg.select(".y.axis").transition().duration(750).call(this.yAxis);
     // updates axis
     that.svg.select(".x.axis").call(this.xAxis)
         .selectAll("text")
@@ -150,4 +189,10 @@ LineVis.prototype.updateVis = function(normal){
             return "rotate(-65)";
         });
 
+};
+
+LineVis.prototype.normalize = function(){
+    var that = this;
+    that.normal = !that.normal;
+    that.updateVis(that.normal);
 };

@@ -1,3 +1,10 @@
+groupCharGlobals = {"label": {
+                    "Demographics":"Jobs",
+                    "Transit": "Sq. Miles",
+                    "Highway": "Sq. Miles"
+                    },
+                    "normal": false
+                };
 
 
 GroupChartVis = function(_parentElement){
@@ -47,17 +54,18 @@ GroupChartVis.prototype.initVis = function() {
         .attr("class", "y axis Groups")
         .call(that.yAxis)
         .append("text")
+        .attr("id","groupYlabel")
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("FIX ME");
+        .text();
 
 
-    this.wrangleData(Demographics.gjobs);
+    this.wrangleData(Demographics.gjobs, groupCharGlobals.label.Demographics);
 };
 
-GroupChartVis.prototype.updateVis = function(normal, normal_I){
+GroupChartVis.prototype.updateVis = function(first, normal_I){
         var that = this;
         that.x0.domain(that.groupData.map(function (d) {
             return d.Level;
@@ -65,7 +73,7 @@ GroupChartVis.prototype.updateVis = function(normal, normal_I){
 
         that.x1.domain(that.assetSet).rangeRoundBands([0, that.x0.rangeBand()]);
 
-        if(!normal) {
+        if(!first) {
             that.y.domain([0, d3.max(that.groupData, function (d) {
                 return d3.max(d.asset, function (d) {
                     return d.value
@@ -74,17 +82,19 @@ GroupChartVis.prototype.updateVis = function(normal, normal_I){
         } else{
             that.y.domain([0, d3.max(that.groupData, function (d) {
                 return d3.max(d.asset, function (d) {
-                    return normal_I%2 !== 0 && normal_I !== 0 ? d.value/that.total[d.Name]: d.value
+                    return normal_I === true ? d.value/that.total[d.Name]: d.value
                 });
             })]);
         }
 
 
 
-    if (!normal){
+
+    if (!first){
         this.svg.select(".y.axis.Groups").call(this.yAxis);
         this.svg.select(".x.axis.Groups").call(this.xAxis);
 
+        d3.select("#groupYlabel").classed("hide", false);
         that.slrLevel = that.svg.selectAll(".slrLevel")
             .data(that.groupData)
             .enter()
@@ -146,10 +156,10 @@ GroupChartVis.prototype.updateVis = function(normal, normal_I){
         this.svg.select(".y.axis.Groups").transition().duration(1000).call(this.yAxis);
         that.slrBars.transition().duration(1000)
             .attr("y", function (d) {
-                return normal_I%2 !== 0 && normal_I !== 0 ? that.y(d.value/that.total[d.Name]): that.y(d.value)
+                return normal_I === true ? that.y(d.value/that.total[d.Name]): that.y(d.value)
             })
             .attr("height", function (d) {
-                return normal_I%2 !== 0 && normal_I !== 0 ? that.height - that.y(d.value/that.total[d.Name]):
+                return normal_I === true ? that.height - that.y(d.value/that.total[d.Name]):
                     that.height - that.y(d.value);
 
             })
@@ -183,11 +193,14 @@ GroupChartVis.prototype.transitionBars = function() {
 
 };
 
-GroupChartVis.prototype.wrangleData = function(_dataSource){
+GroupChartVis.prototype.wrangleData = function(_dataSource, label){
     var that = this;
     that.groupData = null;
     that.groupData = _dataSource.slice(0,6);
     that.total = _dataSource[6];
+    groupCharGlobals.normal = false;
+
+    d3.select("#groupYlabel").classed(".hide", false).text(label);
 
     that.groupData.forEach(function(d,i) {delete that.groupData[i].asset});
 

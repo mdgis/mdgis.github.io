@@ -1,6 +1,7 @@
 /**
  * Created by mdowd on 4/10/15.
  */
+//TODO add legend
 var spider_viz = null;
 SpiderViz = function(_parentElement){
     this.parentElement = _parentElement;
@@ -12,21 +13,54 @@ SpiderViz = function(_parentElement){
     this.taz = null;
 
     queue().defer(d3.json, "RawData/tazCtopo.json")
-        .defer(d3.csv, "RawData/autoDiff.csv")
-        .defer(d3.csv, "RawData/ptDiff.csv")
-        .defer(d3.csv, "RawData/totalLost.csv")
+        .defer(d3.csv, "data/spider/diffAuto2ftClean.csv")
+        .defer(d3.csv, "data/spider/diffAuto3ftClean.csv")
+        .defer(d3.csv, "data/spider/diffAuto4ftClean.csv")
+        .defer(d3.csv, "data/spider/diffAuto5ftClean.csv")
+        .defer(d3.csv, "data/spider/diffAuto6ftClean.csv")
+        .defer(d3.csv, "data/spider/diffpt1ftClean.csv")
+        .defer(d3.csv, "data/spider/diffpt2ftClean.csv")
+        .defer(d3.csv, "data/spider/diffpt3ftClean.csv")
+        .defer(d3.csv, "data/spider/diffpt4ftClean.csv")
+        .defer(d3.csv, "data/spider/diffpt5ftClean.csv")
+        .defer(d3.csv, "data/spider/diffpt6ftClean.csv")
+        .defer(d3.csv, "data/spider/total1ftClean.csv")
+        .defer(d3.csv, "data/spider/total2ftClean.csv")
+        .defer(d3.csv, "data/spider/total3ftClean.csv")
+        .defer(d3.csv, "data/spider/total4ftClean.csv")
+        .defer(d3.csv, "data/spider/total5ftClean.csv")
+        .defer(d3.csv, "data/spider/total6ftClean.csv")
+
         .await(this.ready);
+
 };
 
-SpiderViz.prototype.ready = function(error, taz, auto, pt, total) {
+SpiderViz.prototype.ready = function(error,taz,auto2,auto3,auto4,auto5,auto6,pt1,pt2,pt3,pt4,pt5,pt6,t1,t2,t3,t4,t5,t6) {
     var that = spider_viz;
-    that.links = [];
-    that.vals = [];
     that.taz = taz;
-    that.auto = auto;
-    that.transit = pt;
-    that.total = total
-    that.loaded(that.taz, that.auto)
+    that.spiderData = {
+        "current": "auto",
+        "auto2": auto2,
+        "auto3": auto3,
+        "auto4": auto4,
+        "auto5": auto5,
+        "auto6": auto6,
+        "pt1": pt1,
+        "pt2": pt2,
+        "pt3": pt3,
+        "pt4": pt4,
+        "pt5": pt5,
+        "pt6": pt6,
+        "t1": t1,
+        "t2": t2,
+        "t3": t3,
+        "t4": t4,
+        "t5": t5,
+        "t6": t6
+    };
+
+    that.initSpiderHist();
+
 };
 
 SpiderViz.prototype.initVis = function(){
@@ -34,15 +68,15 @@ SpiderViz.prototype.initVis = function(){
     that.vMax = d3.max(that.links, function(d) {return Math.abs(d.val)});
     that.vScale = d3.scale.linear()
         .domain([10,that.vMax])
-        .range([1,15]);
+        .rangeRound([0,30]);
 
     that.oScale = d3.scale.linear()
         .domain([10,that.vMax])
         .range([.1,.8]);
 
     that.color = d3.scale.linear()
-        .domain([20,100,200,300,400,500,that.vMax])
-        .range(["purple","black","#000329","#29022C","#530230", "orange", "yellow"]);
+        .domain([50,250,500,1000,3000,5000,that.vMax])
+        .range(["black","purple","darkblue","blue","red", "orange", "yellow"]);
 
 
     that.featureLine = that.g.append("g").attr("class","spiderLines").attr("class", "leaflet-zoom-hide")
@@ -62,7 +96,7 @@ SpiderViz.prototype.initVis = function(){
         .data(topojson.feature(that.Mtaz, that.Mtaz.objects.tazCenter).features)
         .enter()
         .append("circle")
-        .attr("r", 2)
+        .attr("r", 4)
         .on("click", function(d){
             var check = d3.selectAll(".theSpiderLines");
             check.classed("hide", function(f) {
@@ -105,6 +139,8 @@ SpiderViz.prototype.initVis = function(){
 
         that.featureLine.attr("d", that.path);
     }
+
+    that.updateSpiderHist();
 };
 
 SpiderViz.prototype.updateVis = function(extent){
@@ -133,9 +169,9 @@ SpiderViz.prototype.loaded = function(taz, spider) {
     var that = spider_viz;
     that.Mtaz = taz;
     that.links = [];
-    that.vals = [];
+    that.spiderHistVals = [];
 
-    that.links.push(9);
+    //that.links.push(9);
     var tazById = d3.map();
 
     that.svg = d3.select(that.parentElement.getPanes().overlayPane).append("svg").attr("id","theSpiderSVG");
@@ -151,104 +187,158 @@ SpiderViz.prototype.loaded = function(taz, spider) {
         d.properties.LatLng = new L.LatLng(d.geometry.coordinates[1], d.geometry.coordinates[0])
     });
 
+
     spider.forEach(function(d) {
         that.links.push({
             type: "LineString",
-            coordinates: [tazById.get(d.O)
-                ,tazById.get(d.D)],
-            val: +d.Diff,
+            coordinates: [tazById.get(Math.floor(d.O))
+                ,tazById.get(Math.floor(d.D))],
+            val: +d.DIFF,
             O: d.O,
             D: d.D
         });
 
-        that.vals.push(+d.Diff)
+        that.spiderHistVals.push(+d.DIFF)
     });
 
     that.initVis();
-    that.spiderHist();
+
 
 };
 
-SpiderViz.prototype.spiderHist = function(){
+SpiderViz.prototype.initSpiderHist = function(){
     var that = this;
-
-    var values = that.vals
 
     // A formatter for counts.
     var formatCount = d3.format(",.0f");
 
-    var margin = {top: 10, right: 30, bottom: 30, left: 50},
-        width = 600 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+    that.SPHmargin = {top: 10, right: 30, bottom: 30, left: 50};
+    that.SPHwidth = 600 - that.SPHmargin.left - that.SPHmargin.right;
+    that.SPHheight = 500 - that.SPHmargin.top - that.SPHmargin.bottom;
 
-    var x = d3.scale.linear()
-        .domain([d3.min(values), d3.max(values)])
-        .range([0, width]);
+    that.spiderHistSvg = d3.select("#spiderHist").append("svg").attr("id", "theSpiderSVG")
+        .attr("width", that.SPHwidth + that.SPHmargin.left + that.SPHmargin.right)
+        .attr("height", that.SPHheight + that.SPHmargin.top + that.SPHmargin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + that.SPHmargin.left + "," + that.SPHmargin.top + ")");
 
-    // Generate a histogram using 100(data is heavily skewed) uniformly-spaced bins.
-    var data = d3.layout.histogram()
-        .bins(x.ticks(100))
-    (values);
+    that.SPHx = d3.scale.linear()
+        .range([0, that.SPHwidth]);
 
-    var y = d3.scale.pow().exponent(.5)
-        .domain([0, 10 + d3.max(data, function(d) { return d.y; })])
-        .range([height, 0]);
+    that.SPHy = d3.scale.pow().exponent(.5);
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
+    that.SPHy
+        .domain([0,50 ])
+        .range([that.SPHheight, 0]);
+
+    that.SPHxAxis = d3.svg.axis()
+        .scale(that.SPHx)
         .orient("bottom");
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
+    that.SPHyAxis = d3.svg.axis()
+        .scale(that.SPHy)
         .orient("left");
 
-    var svg = d3.select("#spiderHist").append("svg").attr("id", "theSpiderHist")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+
+
+    that.spiderHistSvg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + that.SPHheight + ")")
+        .call(that.SPHxAxis)
+        .append("text")
+        .attr("x", 25)
+        .attr("y", 18)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Value");
+
+
+    that.spiderHistSvg.append("g")
+        .attr("class", "y axis")
+        .call(that.SPHyAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Frequency");
+};
+
+SpiderViz.prototype.updateSpiderHist = function(){
+    var that = this;
+    that.SPHx.domain([d3.min(that.spiderHistVals), d3.max(that.spiderHistVals)]);
+
+    d3.selectAll(".spiderBar").remove();
+    // Generate a histogram using 100(data is heavily skewed) uniformly-spaced bins.
+    that.SPHdata = d3.layout.histogram()
+        .bins(that.SPHx.ticks(100))
+        (that.spiderHistVals);
+
+    that.SPHy
+        .domain([0, 10 + d3.max(that.SPHdata, function(d) { return d.y; })])
+        .range([that.SPHheight, 0]);
+
+    that.SPHjoin = that.spiderHistSvg.selectAll(".spiderBar")
+        .data(that.SPHdata);
+
+    that.SPHbar =
+        that.SPHjoin
+        .enter()
         .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("class", "spiderBar");
 
-    var bar = svg.selectAll(".bar")
-        .data(data)
-        .enter().append("g")
-        .attr("class", "bar")
-        .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+    that.SPHbar.append("rect")
+        .attr("x", function(d){return that.SPHx(d.x)});
 
-    bar.append("rect")
-        .attr("x", 1)
-        .attr("width", function(d){return (width/100)-2})
-        .attr("height", function(d) { return height - y(d.y); });
+    that.SPHjoin.selectAll("rect").transition().duration(500)
+        .attr("y", function(d){return that.SPHy(d.y)})
+        .attr("width", function(d){return Math.ceil(that.SPHwidth/100)-1})
+        .attr("height", function(d) { return that.SPHheight - that.SPHy(d.y); })
+        .style("fill", function(d) {
+            return that.color(Math.abs(d.x))});
 
-    svg.append("g")
+
+    that.SPHjoin.exit().remove();
+
+    that.spiderHistSvg.append("g")
         .attr("class", "brush")
-        .call(d3.svg.brush().x(x)
+        .call(d3.svg.brush().x(that.SPHx)
             .on("brush", brushed))
         .selectAll("rect")
-        .attr("height", height);
+        .attr("height", that.SPHheight);
+
+
+
+
 
     function brushed() {
         var s = d3.event.target.extent();
-        that.updateVis(s)
-        //svg.classed("selecting", true);
+        that.updateVis(s);
     }
 
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+    that.spiderHistSvg.select(".y.axis")
+        .transition().duration(750)
+        .call(that.SPHyAxis)
 
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
+
+    that.spiderHistSvg.select(".x.axis")
+        .transition().duration(750)
+        .call(that.SPHxAxis);
+
 
 
 };
 
 SpiderViz.prototype.changeMode = function(e){
     var that = this;
-    var mode = e.innerText === "Auto" ? that.auto :
-        e.innerText === "Transit" ? that.transit :
-            e.innerText === "Total" ? that.total :
+    var level = $("#LostSlider").val();
+    var spider = e.innerText === "Auto" ? "auto"  :
+        e.innerText === "Transit" ? "pt" :
+            e.innerText === "Total" ? "t" :
             null;
-    that.loaded(that.taz, mode)
+    d3.selectAll(".spiderBar").remove();
+    if (spider !== null){
+        that.spiderData.current = spider;
+        that.loaded(that.taz, that.spiderData[spider+level]);
+    }
 };

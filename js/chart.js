@@ -37,7 +37,6 @@ AssetVis.prototype.initVis = function(){
             var level = $("#AssetSlider").val();
             var dim = this.id;
             console.log(dim, level)
-            asset_map_viz.Assets.demoDim = dim.toLocaleLowerCase();
             map3.removeLayer(asset_map_viz.Features);
             asset_map_viz.wrangleDemData(Demographics[dim.toLocaleLowerCase()], dim.toUpperCase(), level)
         })

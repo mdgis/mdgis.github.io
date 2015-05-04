@@ -1,30 +1,43 @@
-TopoStreetMapVis = function(_map, _data){
+//Todo add legend
+
+
+netVizGlobals = {"attribute":"V"};
+NetViz = function(_map, _data){
     this.map = _map;
     this.collection = _data;
+    $("#netV").addClass("selectedButton");
     this.initVis();
     this.updateVis(this.collection, "V")
 };
 
-
-///Probably need to fix some of the This & That things
-
-TopoStreetMapVis.prototype.initVis = function() {
+NetViz.prototype.initVis = function() {
     var that = this;
     that.svg = d3.select(that.map.getPanes().overlayPane).append("svg");
     that.g = that.svg.append("g").attr("class", "leaflet-zoom-hide");
     that.gTopoMap = that.g.append("g").attr("class", "gTopoMap displayed");
 };
 
-TopoStreetMapVis.prototype.updateVis = function(collection, netAttribute) {
+NetViz.prototype.updateVis = function(collection, netAttribute) {
     var that = this;
     var transform = d3.geo.transform({point: projectPoint}),
         path = d3.geo.path().projection(transform);
 
-    var scaleMax = netAttribute === "q" ? 350 : 50;
-    var vMax = d3.max(collection.objects['dta'].geometries, function(d) {return d.properties[netAttribute]});
+    var scaleMax = netAttribute === "q" ? 50 : 50;
+
+    var vMax = d3.max(collection.objects['dta'].geometries, function(d) {
+        return d.properties[netAttribute]});
+
+    if (netAttribute === "q" && vMax > 30000){
+        vMax = 5000
+    }
+
     var vScale = d3.scale.linear()
         .domain([10,vMax])
         .range([1,scaleMax]);
+
+    var colorScale =d3.scale.quantize().domain([0,vMax]).range(["black","purple","darkblue","blue","red", "orange", "yellow"]);
+
+
 
     var feature = that.gTopoMap.selectAll("path")
         .data(topojson.feature(collection, collection.objects['dta']).features);
@@ -32,15 +45,12 @@ TopoStreetMapVis.prototype.updateVis = function(collection, netAttribute) {
     feature
         .enter().append("path");
 
-
-
     feature.attr("class","RoadPath").style("stroke-width", function(d){
-        return vScale(d.properties[netAttribute])}
+            if (d.properties[netAttribute] <= vMax) return vScale(d.properties[netAttribute])}
         )
         .attr("stroke", function(d){
-            return d.properties[netAttribute] > 60 ? "red" : "darkBlue"
+            return colorScale(d.properties[netAttribute] )
         });
-
 
     feature.exit().remove();
 
@@ -67,7 +77,6 @@ TopoStreetMapVis.prototype.updateVis = function(collection, netAttribute) {
         var point = that.map.latLngToLayerPoint(new L.LatLng(y, x));
         this.stream.point(point.x, point.y);
     }
-
 
 };
 

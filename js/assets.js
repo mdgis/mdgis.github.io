@@ -1,13 +1,10 @@
-var gradient = golden;
-var currentAsset = null;
-
-
-//TODO Fix the on click bit, just have it change dimension not water level
 assetsGlobals = {
-    assetMap : null,
-    classify: null,
-    assetStyle: undefined,
-    showWater: true,
+    "gradient" : golden,
+    "currentAsset": null,
+    "assetMap" : null,
+    "classify": null,
+    "assetStyle": undefined,
+    "showWater": true,
     "highlightSlrFeatures" : function(level){
         var check = asset_map_viz.Assets.selected;
         if (check === "Roads" ){
@@ -18,9 +15,9 @@ assetsGlobals = {
                     layer.setStyle({color :'red', weight: 1});
                 }
             })
-        } else if (check === "Highway Exits" || check === "Bus Stops" || "Bus Lines" || "T-Stops"){
-            var asset = check === "Highway Exits" ? "exits" : check === "Bus Stops" ? "busStops" :
-                    check === "T-Stops" ? "T_Stops" : check === "Bus Lines" ?  "busLines" : undefined;
+        } else if (check === "Highway Exits" || check === "Bus" || "The-T"){
+            var asset = check === "Highway Exits" ? "exits" : check === "Bus" ? "busStops" :
+                    check === "The-T" ? "T_Stops"  : undefined;
             if (asset !== undefined){
                 asset_map_viz.Assets[asset].eachLayer(function(layer){
                     if (level === 0 ){
@@ -60,13 +57,29 @@ assetsGlobals = {
             layer.bindPopup(feature.properties["LINE"]);
         } else if (feature.properties && feature.properties["NAME"]) {
             layer.bindPopup(feature.properties["NAME"]);
+        } else if (feature.properties && feature.properties["TAZ"]){
+            layer.bindPopup(feature.properties["TAZ"]);
         }
 
         layer.on('mouseover', function (e) {
             this.openPopup();
+
+            layer = e.target;
+            if (layer.feature.properties.DIRECTION ){
+                layer.setStyle({
+                    color: 'red'
+                })
+            }
+
         });
         layer.on('mouseout', function (e) {
             this.closePopup();
+            layer = e.target;
+            if (layer.feature.properties.DIRECTION ){
+                layer.setStyle({
+                    color: 'yellow'
+                })
+            }
         });
     },
 
@@ -77,31 +90,31 @@ assetsGlobals = {
                 color: "gray",
                 fillOpacity: 0.7
             };
-        }
-
-
+        },
+    "tLineTotals": [0.897196826,1.014706875,1.739433176,5.146858912,10.36589447,15.3624629,63.38788192],
+    "busLineTotals": [30.73420033,49.61719088,108.2431898,253.5823656,537.1498319,721.6394391,8612188.302],
+    "roadTotals":[63.6618823,98.76279535,185.0449799,356.2532247,605.8486136,808.0996323,24577.17603],
+    "totalBusStops": 7678
 };
 ///////Exiting Viz Object Global///////
-
 
 AssetMapVis = function() {
     this.asset_viz = null;
     this.Features = new L.LayerGroup();
     this.initViz("Demographics")
+    $("#assetWater").addClass("selectedButton");
 };
 
 AssetMapVis.prototype.initViz = function(selected){
     var that = this;
-    currentAsset = selected;
-
+    assetsGlobals.currentAsset = selected;
+    $("#AssetDM").addClass("selectedButton");
     that.Assets = {
         "lookUp":{
             "Roads"         : "Highway",
             "Highway Exits" : "Highway",
-            "Bus Stops"     : "Transit",
-            "Bus Lines"     : "Transit",
-            "T-Stops"       : "Transit",
-            "T-Lines"       : "Transit",
+            "Bus"     : "Transit",
+            "The-T"     : "Transit",
             "Demographics"  : "Demographics"
         },
         "selected": "Demographics",
@@ -114,16 +127,28 @@ AssetMapVis.prototype.initViz = function(selected){
         }, onEachFeature: assetsGlobals.onEachFeature}),
         "busStops": L.geoJson(busStops, {style: function(feature) {
             return {color: "black"};}, pointToLayer: function(feature, latlng) {
-            return new L.CircleMarker(latlng, {radius: 4, fillOpacity: 0.85});
+            return new L.CircleMarker(latlng, {radius: 2, fillOpacity: 0.85});
         }, onEachFeature: assetsGlobals.onEachFeature}),
         "T_Lines":L.geoJson(mbtaArc, {style: styles.transitStyle, onEachFeature: assetsGlobals.onEachFeature}),
-        "T_Stops": L.geoJson(T_Stops, {style: function(feature) {
-            return {color: "steelBlue"};}, pointToLayer: function(feature, latlng) {
-            return new L.CircleMarker(latlng, {radius: 4, fillOpacity: 0.85});
+        "T_Stops": L.geoJson(T_Stops, {style: function(feature){
+            return Tstyle(feature)
+        },
+                pointToLayer: function(feature, latlng) {
+                    return new L.CircleMarker(latlng, {radius: 3, fill:"white"});
         }, onEachFeature: assetsGlobals.onEachFeature}),
-        "busLines":L.geoJson(transitLines, {onEachFeature: assetsGlobals.onEachFeature})
+        "busLines":L.geoJson(busLines, {style: function(feature){
+            return {weight: 2, color: "yellow", offset:100}
+        },onEachFeature: assetsGlobals.onEachFeature})
 
     };
+
+
+    function Tstyle(feature){
+        return {
+            color:"black", fill:"black", stroke: "black",weight:2, fillOpacity: 0.5
+        }
+    }
+
     that.wrangleDemData(Demographics.jobs, "jobs", 0);
 
     var legend = L.control( { position: 'bottomright' } );
@@ -136,19 +161,19 @@ AssetMapVis.prototype.initViz = function(selected){
 
 };
 
-var info = L.control();
-
-
 AssetMapVis.prototype.updateVis = function() {
     var that = this;
     that.Assets.taz.setStyle(assetsGlobals.assetStyle);
+    that.Assets.taz.eachLayer(function(d){
+        d.bindPopup(String(Math.round(assetsGlobals.assetMap.get(d.feature.properties.TAZ))))
+    });
     that.Features.addTo(map3)
 };
 
 AssetMapVis.prototype.wrangleDemData = function(dim, label, level) {
     var that = this;
     that.Assets.demoDim = label.toLowerCase();
-    gradient = label.toLocaleLowerCase() === "jobs" ? golden : label.toLocaleLowerCase() === "pop" ? bluish :
+    assetsGlobals.gradient = label.toLocaleLowerCase() === "jobs" ? golden : label.toLocaleLowerCase() === "pop" ? bluish :
         label.toLocaleLowerCase() === "hh" ? redish : golden;
     this.classMap = d3.map();
     Demographics[label.toLowerCase()].forEach(function (d) {
@@ -171,7 +196,7 @@ AssetMapVis.prototype.wrangleDemData = function(dim, label, level) {
     assetsGlobals.classify = chloroQuantile(this.classMap.values(), 8, "jenks");
     assetsGlobals.assetStyle = function (feature) {
         return {
-            fillColor: assetsGlobals.getColor(feature.properties.TAZ, gradient),
+            fillColor: assetsGlobals.getColor(feature.properties.TAZ, assetsGlobals.gradient),
             weight: 0.5,
             opacity: 1,
             color: 'white',
@@ -184,18 +209,17 @@ AssetMapVis.prototype.wrangleDemData = function(dim, label, level) {
     if (level === 0){
         that.toggleLegend(true)
     } else {
-        that.toggleLegend(false)
+        that.toggleLegend(false);
         that.addDemLegend();
     }
 };
-
 
 AssetMapVis.prototype.addDemLegend = function() {
     d3.selectAll(".assetLegendRect").remove();
     d3.selectAll(".assetLegendSVG").remove();
 
-    var legendData = assetsGlobals.classify.slice(0)
-    legendData = legendData.slice(1,9)
+    var legendData = assetsGlobals.classify.slice(0);
+    legendData = legendData.slice(1,9);
     var legendHeight = 180;
     var legend = d3.select(".assetLegend")
         .append("svg")
@@ -219,7 +243,7 @@ AssetMapVis.prototype.addDemLegend = function() {
         .attr("width", ls_w)
         .attr("height", ls_h)
         .style("fill", function(d, i) {
-                return gradient[i]
+                return assetsGlobals.gradient[i]
         })
         .style("opacity", 0.7);
 
@@ -235,11 +259,15 @@ AssetMapVis.prototype.toggleLegend = function(bool){
     d3.select(".assetLegend").classed("hide",bool)
 };
 
-
-AssetMapVis.prototype.updateLayers = function(layer){
+AssetMapVis.prototype.updateLayers = function(layer, layer2){
     var that = this;
     that.Features.clearLayers();
-    that.Features.addLayer(that.Assets[layer]);
+    if (layer2){
+        that.Features.addLayer(that.Assets[layer2]);
+        that.Features.addLayer(that.Assets[layer]);
+    } else {
+        that.Features.addLayer(that.Assets[layer])
+    }
     that.updateVis();
 };
 

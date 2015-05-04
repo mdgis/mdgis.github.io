@@ -21,7 +21,7 @@ AccessVis = function(_parentElement, _classLabel){
 
 
 AccessVis.prototype.initVis = function() {
-    that = this;
+    var that = this;
 
 // find the top left and bottom right of current projection
     this.path = d3.geo.path()
@@ -45,7 +45,7 @@ AccessVis.prototype.initVis = function() {
 
 
 AccessVis.prototype.zoomed = function() {
-    that = access_viz;
+    var that = access_viz;
     that.projection.translate(d3.event.translate).scale(d3.event.scale);
     that.g.selectAll("path").attr("d", that.path);
 };
@@ -57,11 +57,11 @@ AccessVis.prototype.showValue = function(val){
 
 
 AccessVis.prototype.updateVis = function(){
-    that = this;
+    var that = this;
 
     console.log("IN accessVis UpdateVis")
     function manualColor(val) {
-        out =
+        var out =
             val < that.classify[0] ? 0 :
                 val < that.classify[1] ? 1 :
                     val < that.classify[2] ? 2 :
@@ -98,7 +98,7 @@ AccessVis.prototype.updateVis = function(){
 };
 
 AccessVis.prototype.wrangleData = function(access, level){
-    that = this;
+    var that = this;
     //Control For First Case Situations
     this.first = current === null;
     if(!current){ current = auto };

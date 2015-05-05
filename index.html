@@ -6,10 +6,13 @@
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
     <script src="libs/queue/queue.min.js"></script>
+    <!--<script src="http://d3js.org/queue.v1.min.js"></script>-->
+
     <script src="libs/topojson-master/topojson.js"></script>
     <script src="libs/leaflet-0.7.3/leaflet.js"></script>
     <script src="packages/simple_statistics.js"></script>
     <script src="libs/jquery/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 
     <!-- My Tools -->
@@ -131,7 +134,23 @@
             <div class="col-md-12 column" id = "Bar">
 
 
+
+
+
                 <h1>Visualizing Inundation Impacts on Transportation Networks</h1>
+                <p> A major source of uncertainty for many cities and regions throughout the world is the potential impacts of climate change. These impacts include, but are not limited to, extreme weather events, changes in global temperature, droughts, and sea level rise. Of these many potential impacts sea level rise is perhaps the most relevant to transportation systems as higher sea levels coupled with extreme weather hold the potential for inundation of transportation networks and resulting impacts to the people that live, work and travel to these areas.
+                </p>
+                    <p>My thesis research focuses on modeling inundation impacts on transportation networks in the Boston Metro Region. The data for the "Inundated Assets" visualization is derived from GIS analysis in Arcmap. All other charts have data derived from
+                    the MIT - <a href="http://citilabs.com/software/products/cube/cube-voyager" target="_blank">Cube Voyager</a>  Four Step Transportation Model. Four Step models are used to estimate the
+                        travel patterns in a region. The output of these models includes origin destination matrices by different modes, as well as network (Transit & Highway) attributes that describe the performance of the network given the number of users in the system.
+                        For more information on four step models please see the <a href="http://en.wikipedia.org/wiki/Transportation_forecasting#Four-step_models" target="_blank">basic description</a> for a more
+                    the detailed description of methods and models please see this <a href="http://ntl.bts.gov/lib/21000/21500/21563/PB99126724.pdf" target="_blank">source</a> or contact <a href="mailto:mikdowd@gmail.com">Michael Dowd</a>.
+
+                </p>
+                <h4><strong>Assumptions</strong></h4>
+                <p>When modeling inundation in the Cube model system, I assume that all users of the sytem will attempt to complete their trip even if portions of the region are inundated.
+                I am modeling a normal day where the transport network is compromised but people still attempt to complete their normal trips if possible. </p>
+                <h4><em>For information on using and interpreting this visualization please reference the</em> <a href="#" target="_blank">Use Video.</a></h4>
                 <h2>Inundated Assets</h2>
                     <div class="btn-group-horizontal btn-group" id = "AssetSelection">
                         <div class="Btype slider">
@@ -171,13 +190,9 @@
             <div class="col-lg-6">
                 <div class="tabContainer">
                     <ul class="tabs">
-                        <li class="tab-link" data-tab="tab-1">Context</li>
                         <li class="tab-link-current" data-tab="tab-2">Charts</li>
                         <li class="tab-link" data-tab="tab-3">Specifics</li>
                     </ul>
-                    <div id="tab-1" class = "tab-content">
-                        <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
-                    </div>
 
                     <div id="tab-2" class="tab-content current">
                         <p><strong>Click Chart to View Different Asset &nbsp;&nbsp;&nbsp; </strong>
@@ -198,8 +213,8 @@
                     </div>
 
                     <div id="tab-3" class="tab-content">
-                        <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                        <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+                        <!--<p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>-->
+                        <!--<p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>-->
                         <p><strong>Click to see Percentages &nbsp;&nbsp;&nbsp; </strong>
                             <button type="button" class="Normal btn btn-default dropdown-toggle" id="spNormal" value = 0 onclick="normalSpecial()"> Normalize
                             </button> </p>
@@ -245,9 +260,9 @@
         <!--*************************** ACCESSIBILITY CHANGE ***************************-->
         <div class="row clearfix">
             <div class="col-md-12 column intro" >
-                <p>
-                   aecenas eget feugiat justo. Nullam eros erat, suscipit sed turpis ut, tempus pharetra orci. Suspendisse tincidunt nisl a vehicula fermentum. Mauris bibendum orci dictum placerat vulputate. Fusce ut velit pulvinar, sagittis ex ac, convallis lorem. Duis purus felis, venenatis tristique sollicitudin et, aliquam eget est. Donec egestas odio quis ligula pulvinar, id finibus est sodales. Integer eu semper leo. Maecenas eu lorem vel nunc dapibus ullamcorper. Etiam semper, eros ut ultricies maximus, felis metus aliquam libero, ac efficitur massa sapien eu urna. Nullam vehicula quis tellus tincidunt malesuada. Nulla pulvinar tempus mauris, mollis varius nisl blandit pulvinar. Praesent et porta odio. Sed sit amet volutpat lacus, et hendrerit lorem. Etiam non vestibulum nisl.
-                </p>
+                <!--<p>-->
+                   <!--aecenas eget feugiat justo. Nullam eros erat, suscipit sed turpis ut, tempus pharetra orci. Suspendisse tincidunt nisl a vehicula fermentum. Mauris bibendum orci dictum placerat vulputate. Fusce ut velit pulvinar, sagittis ex ac, convallis lorem. Duis purus felis, venenatis tristique sollicitudin et, aliquam eget est. Donec egestas odio quis ligula pulvinar, id finibus est sodales. Integer eu semper leo. Maecenas eu lorem vel nunc dapibus ullamcorper. Etiam semper, eros ut ultricies maximus, felis metus aliquam libero, ac efficitur massa sapien eu urna. Nullam vehicula quis tellus tincidunt malesuada. Nulla pulvinar tempus mauris, mollis varius nisl blandit pulvinar. Praesent et porta odio. Sed sit amet volutpat lacus, et hendrerit lorem. Etiam non vestibulum nisl.-->
+                <!--</p>-->
 
             </div>
 
@@ -277,11 +292,11 @@
                 <div class="col-md-6 column">
                     <!--Top-->
                     <div class="DataSelection" id = Access_DS>
-                        <p>   Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-                            Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                        <!--<p>   Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.-->
+                            <!--Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.-->
 
 
-                        </p>
+                        <!--</p>-->
                     </div>
 
                     <div id = "accessHist">
@@ -307,12 +322,6 @@
         <div class =  "row clearfix" id="lostTrips">
             <div class="col-md-12 column intro" >
                 <h1>Lost Trips Given 4ft of Inundation</h1>
-                <p>
-                    Many trips can no longer be complteded given inundation of the road and transit networks. Below highilights the origin and destination pairs that lost the most trips. I used a cutoff value of 100 trips. If the total lost trips
-                    between a given Origin and Destination was less than 100 then a line is not drawn. The thickness of the lines indicate the number of lost trips they are further redundantly encoded by color
-                    to make them visually clear.
-                </p>
-                <h3>Click the Buttons to change between Transit | Auto | Total </h3>
             </div>
             <div class="col-md-12 column">
                 <div class="btn-group-horizontal btn-group" id = "SpiderSelection" class = "containerGroup">
@@ -321,9 +330,9 @@
                         <span>Inundation Level :&nbsp;</span>
                         <span id="Lostrange">1ft</span>
                     </div>
-                    <button type="button" class="btn btn-default  Stype" id = "SpiderA">Auto</button>
-                    <button type="button" class="btn btn-default  Stype" id = "SpiderT">Transit</button>
-                    <button type="button" class="btn btn-default Stype" id  = "SpiderTot">Total</button>
+                    <button type="button" class="btn btn-default  Stype" id = "spAuto">Auto</button>
+                    <button type="button" class="btn btn-default  Stype" id = "spTransit">Transit</button>
+                    <button type="button" class="btn btn-default Stype" id  = "spTotal">Total</button>
                     <button type="button" class="btn btn-default fillerButton"></button>
                     <button type="button" class="btn btn-default " data-toggle="modal" data-target="#lostTripsModal">?</button>
 
@@ -332,7 +341,7 @@
             <!--Spider Map-->
             <div class="col-md-6 column">
                 <div id="spiderHist"></div>
-                <div class = "DataLower"></div>
+                <div id = "totalLost"></div>
             </div>
             <div class="col-md-6 column">
                 <div id="map4"></div>
@@ -344,6 +353,7 @@
 
             <div class="col-md-12 column intro" >
                 <h1>Auto Network Impacts</h1>
+                <h5 style="color:red;">Please Click on Slider Circle Icon and Use Arrow Keys to Switch Between Inundation Levels</h5>
                 <div class="btn-group-horizontal btn-group" id = "NetSelection">
                     <div class="Btype slider">
                         <span></span><input id="netSlider" type="range" min=0 max=6 step=1 value=0 oninput="showValue(value, 'Net')"><span id="netSpan"></span>
@@ -352,6 +362,9 @@
                     </div>
                     <button type="button" class="btn btn-default netType" id = "netV" value = "V">Volumes</button>
                     <button type="button" class="btn btn-default netType" id = "netq" value = "q">Queues</button>
+                    <!--<button type="button" class="btn btn-default fillerButton"></button>-->
+                    <!--<button type="button" class="btn btn-default " id = "netPlay" >Play</button>-->
+                    <!--<button type="button" class="btn btn-default " id = "netReset" >Reset</button>-->
                     <button type="button" class="btn btn-default fillerButton"></button>
                     <button type="button" class="btn btn-default " data-toggle="modal" data-target="#autoNetModal">?</button>
 
@@ -359,17 +372,11 @@
             </div>
 
             <!--Traffic Volumes Map-->
-            <div class="col-md-6 column">
+            <div class="col-md-12 column">
                 <!--Top-->
-                <div class="DataSelection">
-                    <p>   Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-                        Etiam ex nulla, sollicitudin vel laoreet in, finibus eu nunc. Vestibulum justo felis, dapibus id justo non, aliquam ullamcorper nulla. Pellentesque id posuere dolor. Sed id orci dignissim, aliquet tortor mattis, egestas eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer lobortis, orci at posuere scelerisque, tellus lectus hendrerit leo, non pulvinar lectus nisl at mauris. Cras cursus, nibh et iaculis dignissim, ante neque iaculis turpis, vitae auctor mi turpis id odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-6 column">
+
                 <div id="map5"></div>
-            </div>
+
         </div>
         <!--END ALL BUT THE MENU-->
     </div>
@@ -385,7 +392,34 @@
                             <h4 class="modal-title" id="assetModalLabel">Inundated Assets</h4>
                         </div>
                         <div class="modal-body">
-                            ...
+                            <p>This visualization shows different assets (Jobs, Transit Stations, Roads, etc. that are impacted by flooding. The data is derived from
+                            GIS intersection analyses. Jobs, Population and Household data were only available at a zonal level therefore impacts were determined using a
+                                proportional split procedure where the proportion of inundated area in a zone was used to determining the proportion of impacted assets in
+                                that zone. All other data was available as point data that had specific X & Y coordinates. These data sources were directly intersected with the
+                            different water layers to determine if they were potentially impacted.
+                            <h3>Use:</h3>
+                            <ul>
+                                <li>The buttons trigger different data sources and corresponding graphs. The main data sources are Demographics, Transit and Auto.</li>
+                                <li>The Water button toggles on and off the water layers. </li>
+                                <li>The slider bar transitions the data for the different inundation levels. </li>
+                                <li>There are two tabs to the right of the main map: Charts & Specifics
+                                    <ul>
+                                        <li>Charts contains small charts showing the changing impact over the different inundation levels</li>
+                                        <li>Specifics contains a grouped bar chart highlight a specific detail of the data related to either Demographics, Highway, or Transit</li>
+                                    </ul>
+
+                                </li>
+                                <li>All data can be normalized by pressing the Normalize button.</li>
+
+                            </ul>
+                            <h3>Main Findings</h3>
+                            <ul>
+                                <li>By examining the grouped chart under the specifics tab in the Demographics data we see that the percentage impact of inundation on service jobs is very high. Service jobs are arguably the most important sector to the economy and are growing faster than retail and basic jobs
+                                This highlights that flooding has the potential to cause major economic impacts on the city of Boston just from and employment perspective.
+                                </li>
+                                <li>In terms of Transit the Red Line and Blue line see major impacts under inundation levels four feet and higher. We can expect many transit users will be unable
+                                to reach a destination if inundation has occurred in the city because of </li>
+                            </ul>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -403,8 +437,48 @@
                             <h4 class="modal-title" id="myModalLabel">Transit Ridership</h4>
                         </div>
                         <div class="modal-body">
-                            <h3>Thish is some heading</h3>
-                            <p>Thisis is s some discussions ballahbhajbajhs husdfu sjhbfjs sdj </p>
+                            <p>This visualization shows the difference between ridership on transit routes given no inundation and four feet of inundation.
+                                Inundation causes some routes to be heavily impacted or inoperable in some regions. The model allows portions of a route to operate
+                                even if other portions are inundated. The four foot inundation level is presented because there are major impacts while much of the region
+                                is still free of inundation. I do not present all six inundation levels because of data size constraints.
+                                </p>
+                            <p>This visualization allows us to examine possible shifts in ridership due to inundation impacts. A possible question that can be examined with
+                            this visualization is "If the Red Line is inundated what other routes might persons use to reach their destination." Such answers could be used to preemtively
+                            bolster service on specific bus routes or rail lines</p>
+                            <h3>Use</h3>
+
+                            <h4>The Table</h4>
+                            <p>The table contains data on:   </p>
+                                <ul>
+                                    <li>Each transit route, and its specific mode, present in the model system</li>
+                                    <li>Ridership on these routes given no inundation (Base Ridership)</li>
+                                    <li>Ridership on these routes given 4ft inundation (4ft Ridership)</li>
+                                    <li>Difference in Ridership (4ft Ridership - Base Ridership) </li>
+                                    <li>Clicking a route in the table will display the boardings and alightings at stops along that route - as well
+                                    as nearby ( 1/2 Mile ) stops that had either <em>Ridership Increases</em> or <em>Ridership Decreases</em>.
+                                    </li>
+                                </ul>
+
+
+                            <h4>Ridership Increase</h4>
+                            <p>When this button is selected if a route is selected from the table the only stops visualized will be those stops along the selected route
+                            and those stops within 1/2 mile of the selected route that had increases in ridership. This allows a user to search for routes that possibly gained
+                            ridership because of inundation on another route. (See Red Line) </p>
+                            <h4>Ridership Decrease</h4>
+                            <p>When this button is selected if as route is selected from the table the only stops visualized will be the stops on the selected route
+                            and those stops withing 1/2 mile of the selected route that had decreases in ridership. This allows a user to search for routes that may have gained riders
+                            in response to other nearby routes being inundated. (See CT2) </p>
+
+                            <h3>Main Findings</h3>
+                            <ul>
+                                <li>Provides a unique opportunity to see potential shifts in route choice given inundation in the area and on the network.</li>
+                                <li>Fixed rail lines see major decreases in ridership that is not accounted for in increases in bus ridership.</li>
+                                <li>The bus routes CT2 and 85 see increases in ridership that are likely coming from Red Line users who can no longer reach their destination on that route.</li>
+
+                             </ul>
+
+
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -419,9 +493,56 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="lostModalLabel">Accessibility Stuff</h4>
+                        <h4 class="modal-title" id="lostModalLabel">Accessibility To Jobs</h4>
                     </div>
                     <div class="modal-body">
+
+                        <p>Accessibility metrics attempt to quantify the ability to reach assets (in this case Jobs) from a zone. The simplest accessibility measure is a cutoff measure
+                            which communicates the number of jobs a person in a given zone can reach within a certain amount of time. These are sometimes called <a href="http://wiki.openstreetmap.org/wiki/Isochrone" target="_blank">Isochrones</a>.
+                            I have normalized to sum of all jobs accessible from each zone in an hour by diving by the total number of jobs in the model region.
+                        </p>
+                        <p>
+                            There are many other accessibility metrics that vary in complexity, I have included a measure that incorporates an impedance function, a Gamma Measure. This accessibility counts
+                            jobs that take longer to access less than those that take a shorter time. THere is no time cutoff in this measure, though at high travel times the contribution of a zones jobs to the total sum of
+                            weighted jobs is close to zero. The gamma measure output values can only be interpreted relative to other gamma function values.
+                        </p>
+
+                        <h3>Use</h3>
+                        <p>The slider will display the accessibility changes over the different inundation levels. One can view the accessibility for Walk, Transit and Auto. The scale for each mode is fixed to
+                        facilitate comparison over inundation levels. </p>
+                        <p>The Accessibility Histogram is "brushable" and will show only those zones with corresponding values in the map.</p>
+
+                        <h3>Main Findings</h3>
+                        <ul>
+                            <li>Auto always has the highest accessibility and is much less impacted by inundation because of the dense and redundant road network in the region</li>
+                            <li>Transit and Walk accessibility to jobs is always drastically smaller than Auto accessibility and is concentrated region's inner core.</li>
+                            <li>Transit accessibility to jobs is drastically impacted by inundation.</li>
+
+                        </ul>
+
+                        <h3>Accessibility Calculation</h3>
+
+                        <p>$$ \mathbf{Jobs\ Gamma \ Accessibility }$$</p>
+
+                        <p>
+                            $$Accessibility_{i} \sum_{j \in Z} \frac{Jobs_i}{\sum_{j \in Z} Jobs_j} * TT_{ij}^{-.503} * e^{-0.078 * TT_{ij}} $$
+                        </p>
+                        <p> $$ \text{Where $Z$ = All Zones}$$</p>
+
+                        <br>
+                        <p>$$ \mathbf{ Jobs\ Cutoff\ Accessibility}$$</p>
+                        <p>
+                            $$Accessibility_{i} =  \frac{\sum_{j \in Z} Jobs_j*TT_{ij}}{\sum_{j \in Z} Jobs_j} $$
+                        </p>
+                        <p>$$ TT_{ij} =
+                            \begin{cases}
+                            1,  & \text{if $ TT_{ij}$ is $\leq$ 60 Minutes} \\[2ex]
+                            0, & \text{if $ TT_{ij}$ is $>$ 60 Minutes}
+                            \end{cases}$$</p>
+
+                        <br>
+                        <p> $$ \text{Where $TT_{IJ} = $ Travel Time Between Zone $I$ and Zone $J$ }$$</p>
+                        <p> $$ \text{Where $Z$ = All Zones}$$</p>
 
                     </div>
                     <div class="modal-footer">
@@ -440,7 +561,26 @@
                         <h4 class="modal-title" id="myModalLabel">Lost Trips</h4>
                     </div>
                     <div class="modal-body">
-                        ...
+                        <p>
+                            Many trips can no longer be completed given inundation of the road and transit networks. This visualization shows those origin and destination pairs that lost the most trips. I used a cutoff value of 50 trips to prune the dataset down plus the direction of flow is
+                            collapsed as well to reduce the size of the data. Meaning that trips lost between zones O & D are grouped with trips lost between zones D & O.
+                            If the total lost trips between a given Origin and Destination was less than 50 then a line is not drawn. The thickness of the lines indicate the number of lost trips they are further redundantly encoded by color.
+                            to make them visually clear. This type of visualization is sometimes called a <a href="http://www.fhwa.dot.gov/planning/census_issues/ctpp/training/flow.cfm>" target="_blank">"Desire Line"</a>  map and is usually generated in proprietary transport modeling software packages.
+                        </p>
+                        <h3>Use</h3>
+                        <p>Click the Buttons to change between Transit, Auto, Total. </p>
+                        <p>Total is just the sum of Transit and Auto.</p>
+                        <p>The Lost Trips Histogram is "brushable" and linked to the map. When brushed only those brushed values will appear in the map.</p>
+                        <p>The <em>Total Percent of Lost Trips</em> is included for reference. About 16.4 Million total number of trips  occur in one day in the model region.</p>
+                    <h3>Main Findings:</h3>
+                        <ul>
+                            <li>The greatest number of lost auto trips occur north of the inner core. Though the total number summed by the inner core is likely larger but the trips
+                            are split up into many different zones.</li>
+                            <li>Transit Lost trips are far fewer but very concentrated in the inner core.
+                            </li>
+                            <li>Lost trips occur where inundation occers (reference inundated assets map)</li>
+                        </ul>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -455,10 +595,25 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Auto Network Stuff</h4>
+                        <h4 class="modal-title" id="myModalLabel">Auto Network Volumes & Queues</h4>
                     </div>
                     <div class="modal-body">
-                        ...
+                        <p>This visualization shows the modeled highway volumes and queues of vehicles across the six different inundation levels. </p>
+
+                        <h3>Volumes</h3>
+                        <p>Modeled auto volumes each link. The unit of measurement is vehicles per link.</p>
+                        <h3>Queues</h3>
+                        <p>Queuing vehicles are those vehicles that can pass througha given link because of congestion on the highway network. Areas of high queues would
+                        be areas that are heavily congested (i.e. standstill traffic). </p>
+
+                        <h3>Main Findings:</h3>
+                        <ul>
+                            <li>As inundation increases volumes move to outer ring roads (MA Route 128 & HWY 95 & HWY 93)</li>
+                            <li>As inundation increases queues move toward these outer ring roads as well, though there are other links that become heavily congested
+                            in the inner core area. These links are likely congested because other alternative links are inundated.
+                            </li>
+                            <li>At six feet of inundation there is much less congestion in the network because there are far fewer vehicles in the network overall</li>
+                        </ul>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -468,11 +623,11 @@
         </div>
 
 
+    </div>
 </div>
 </body>
 
 <script>
-    //TODO change all normalized chart axes to percentages
     var test;
     var data;
     var access;
@@ -481,23 +636,7 @@
     var lookUp ={};
     var info = L.control();
 
-    queue()
-            .defer(d3.json, "data/TazClip.json")
-            .defer(d3.json, "data/assets/jobs.json")
-            .defer(d3.json, "data/assets/hh.json")
-            .defer(d3.json, "data/assets/pop.json")
-            .defer(d3.json, "data/assets/tazarea.json")
-            .defer(d3.csv, "data/access_JOBS/autoJobs.csv")
-            .defer(d3.csv, "data/access_JOBS/transitJobs.csv")
-            .defer(d3.csv, "data/access_JOBS/walkJobs.csv")
-            .defer(d3.csv, "data/access_JOBS/gautoJobs.csv")
-            .defer(d3.csv, "data/access_JOBS/gtransitJobs.csv")
-            .defer(d3.csv, "data/access_JOBS/gwalkJobs.csv")
-            .defer(d3.csv, "data/assets/groupJobs.csv")
-            .defer(d3.json, "data/dtaTopo0ft.json")
-            .defer(d3.csv, "data/assets/groupRoads.csv")
-            .defer(d3.csv, "data/assets/groupTransitLines.csv")
-            .await(ready);
+
 
     //Load Data for lookup Table used to clean up Transit Route Names
     d3.json("data/relabelTransit.json", function(data){
@@ -517,16 +656,16 @@
 
     var Demographics = {
         "jobs": null,
-        "hh"  : null,
+        "households":null,
         "pop" : null,
-        "tazarea":null,
+        "firms":null,
         "gjobs": null,
         "groads":null,
         "gtlines":null
     };
 
     var accessUnits = {
-      "method": "",
+      "method": "c",
       "mode": "auto",
       "auto": null,
       "transit" : null,
@@ -545,6 +684,31 @@
         "n5" : null,
         "n6" : null
     };
+
+
+
+    function testing(error, d2,d3){
+        console.log("TESTING", d2,d3)
+    }
+
+    queue()
+            .defer(d3.json, "data/TazClip.json")
+            .defer(d3.json, "data/assets/jobs1.json")
+            .defer(d3.json, "data/assets/hh.json")
+            .defer(d3.json, "data/assets/pop.json")
+            .defer(d3.json, "data/assets/firms2.json")
+            .defer(d3.csv, "data/access_JOBS/autoJobs.csv")
+            .defer(d3.csv, "data/access_JOBS/transitJobs.csv")
+            .defer(d3.csv, "data/access_JOBS/walkJobs.csv")
+            .defer(d3.csv, "data/access_JOBS/gautoJobs.csv")
+            .defer(d3.csv, "data/access_JOBS/gtransitJobs.csv")
+            .defer(d3.csv, "data/access_JOBS/gwalkJobs.csv")
+            .defer(d3.csv, "data/assets/groupJobs.csv")
+            .defer(d3.json, "data/dtaTopo0ft.json")
+            .defer(d3.csv, "data/assets/groupRoads.csv")
+            .defer(d3.csv, "data/assets/groupTransitLines.csv")
+            .await(ready);
+
 
     var styles = {
         "waterStyle": function waterStyle(feature){
@@ -596,25 +760,25 @@
 
     };
 
-    function ready(error, theTaz, Qjobs, Qhh, Qpop, Qtazarea, Qauto, Qtransit, Qwalk, QGauto, QGtransit, QGwalk,  Qgrjobs, Qnet0, Qgroads, Qgtlines) {
+    function ready(error, theTaz, Qjobs, Qhh, Qpop, Qfirms, Qauto, Qtransit, Qwalk, QGauto, QGtransit, QGwalk, Qgrjobs, Qnet0, Qgroads, Qgtlines) {
+
+        console.log("Ready ", theTaz)
         data = theTaz;
-        accessUnits.auto = Qauto;
-        accessUnits.transit = Qtransit;
-        accessUnits.walk = Qwalk;
+        Demographics.jobs = Qjobs;
+        Demographics.households = Qhh;
+        Demographics.pop = Qpop;
+        Demographics.gjobs = Qgrjobs;
+        Demographics.firms = Qfirms;
+        Demographics.groads = Qgroads;
+        Demographics.gtlines = Qgtlines;
+        accessUnits.cauto = Qauto;
+        accessUnits.ctransit = Qtransit;
+        accessUnits.cwalk = Qwalk;
         accessUnits.gauto = QGauto;
         accessUnits.gwalk = QGtransit;
         accessUnits.gtransit = QGwalk;
-        access = accessUnits.auto;
-        Demographics.jobs = Qjobs;
-        Demographics.hh = Qhh;
-        Demographics.pop = Qpop;
-        Demographics.gjobs = Qgrjobs;
-        Demographics.tazarea = Qtazarea;
-        Demographics.groads = Qgroads;
-        Demographics.gtlines = Qgtlines;
+        access = accessUnits.cauto;
         nets.n0 = Qnet0;
-
-
 
         queue()
                 .defer(d3.json, "data/dtaTopo1ft.json")
@@ -636,7 +800,7 @@
 
         //Leaflet Base Maps
         map = L.map("map").setView([42.3596, -71.0561], 12);
-        //'http://{s}.acetate.geoiq.com/tiles/acetate/{z}/{x}/{y}.png'
+
         L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 18,
             minZoom: 11,
@@ -682,13 +846,14 @@
         street_viz = new StreetMapVis("map");
         //Access Map Stuff
         assetsGlobals.current = null;
-        access = accessUnits.auto;
+        access = accessUnits.cauto;
         access_viz = new AccessVis(d3.select("#map2"), "Access");
         //Asset Map
         asset_map_viz = new AssetMapVis();
         group_char_viz = new GroupChartVis("#context");
         //Spider Map
         spider_viz = new SpiderViz(map4);
+        asset_map_viz.asset_viz5 = new LineVis(d3.select("#totalLost"), assetsGlobals.totalLostTrips, "Total Percent Lost Trips",false,true);
         traffic_map = new NetViz(map5, nets.n0);
 
         //END READY FUNCTION
@@ -733,18 +898,10 @@
         } else if (sliderViz === "Lost") {
             d3.selectAll(".theSpiderLines").remove();
             d3.selectAll(".centroids").remove();
-
-            console.log("Current SPider Data",spider_viz.spiderData.current, "Value", value);
-            if (spider_viz.spiderData.current === "auto" && value > 1){
-                spider_viz.loaded(spider_viz.taz, spider_viz.spiderData[spider_viz.spiderData.current + value])
-            } else if (spider_viz.spiderData.current === "auto" && value == 1) {
-                d3.selectAll(".spiderBar").remove();
-            }
-            else {
-                spider_viz.loaded(spider_viz.taz, spider_viz.spiderData[spider_viz.spiderData.current + value])
+            spider_viz.loaded(spider_viz.taz, spider_viz.spiderData[spider_viz.spiderData.current + value])
             }
 
-        }
+
     }
 
     function updateSpecialChart(check){
@@ -812,8 +969,8 @@
                         $("#AssetDM").addClass("selectedButton");
                         asset_map_viz.asset_viz = new AssetVis(d3.select("#chart"), Demographics.jobs, "Jobs");
                         asset_map_viz.asset_viz2 = new AssetVis(d3.select("#chart1"), Demographics.pop, "Pop");
-                        asset_map_viz.asset_viz3 = new AssetVis(d3.select("#chart2"), Demographics.hh, "hh");
-                        asset_map_viz.asset_viz4 = new AssetVis(d3.select("#chart3"), Demographics.tazarea, "Taz Area Meters Sq.");
+                        asset_map_viz.asset_viz3 = new AssetVis(d3.select("#chart2"), Demographics.households, "Households");
+                        asset_map_viz.asset_viz4 = new AssetVis(d3.select("#chart3"), Demographics.firms, "Firms");
                         asset_map_viz.wrangleDemData(Demographics.jobs, "JOBS", 0)
 
                     }
@@ -838,11 +995,13 @@
         //Lost Trip Buttons
         $("#SpiderSelection").on("click", function(e){
             if (e.target !== "range" && ["Auto", "Transit", "Total"].indexOf(e.target.innerText) > -1){
-                d3.selectAll(".spiderBar").remove();
-                d3.selectAll(".theSpiderLines").remove();
-                d3.selectAll(".centroids").remove();
-                spider_viz.changeMode(e.target)
-            }
+                    console.log("in the spider button click", e.target.innerText);
+                    d3.selectAll(".spiderBar").remove();
+                    d3.selectAll(".theSpiderLines").remove();
+                    d3.selectAll(".centroids").remove();
+                    spider_viz.changeMode(e.target)
+                }
+
         });
         //Road Network Buttons
         $(".netType").on("click", function(e){
@@ -857,6 +1016,8 @@
                 $("#netq").addClass("selectedButton");
                 $("#netV").removeClass("selectedButton");
             }
+            d3.selectAll(".netLegendRect").remove();
+            d3.selectAll(".netLegendSVG").remove();
             traffic_map.updateVis(data,netVizGlobals.attribute)
         });
         //Acceessibility Buttons
@@ -866,7 +1027,7 @@
                 if (d.target.innerText === "Cutoff Measure") {
                     $("#CM").addClass("selectedButton");
                     $("#GM").removeClass("selectedButton");
-                    accessUnits.method = "";
+                    accessUnits.method = "c";
                 } else if (d.target.innerText === "Gamma Measure") {
                     $("#GM").addClass("selectedButton");
                     $("#CM").removeClass("selectedButton");
@@ -967,9 +1128,84 @@
 
 
 
+//$("#netPlay").on("click", function(){
+//    var vals = [0,1,2,3,4,5,6];
+//    var index = 0;
+//    var first = true;
+//
+//    var start = new Date().getTime();
+//    function execute() {
+//
+//        if ((new Date().getTime() - start) > 30000  ){
+//            clearInterval(call)
+//        }
+//
+//        console.log("index", index, vals);
+//        $("#netSlider").val(index);
+//        showValue(vals[index], 'Net');
+//        if (index === 6){
+//            vals.reverse();
+//            index = 5;
+//        } if (index===0 && !first){
+//            vals.reverse()
+//        }
+//
+//        if (vals[0]===6){
+//            index -= 1;
+//        } else {
+//            index += 1
+//        }
+//        first = false;
+//    }
+//
+//    var call = setInterval(execute, 2000)
+//
+//
+//
+//})$("#netPlay").on("click", function(){
+//    var vals = [0,1,2,3,4,5,6];
+//    var index = 0;
+//    var first = true;
+//
+//    var start = new Date().getTime();
+//    function execute() {
+//
+//        if ((new Date().getTime() - start) > 30000  ){
+//            clearInterval(call)
+//        }
+//
+//        console.log("index", index, vals);
+//        $("#netSlider").val(index);
+//        showValue(vals[index], 'Net');
+//        if (index === 6){
+//            vals.reverse();
+//            index = 5;
+//        } if (index===0 && !first){
+//            vals.reverse()
+//        }
+//
+//        if (vals[0]===6){
+//            index -= 1;
+//        } else {
+//            index += 1
+//        }
+//        first = false;
+//    }
+//
+//    var call = setInterval(execute, 2000)
+//
+//
+//
+//})
 
-
-
+//    queue()
+//            .defer(d3.json, "data/assets/jobsREPO.json")
+//            .await(testq);
+//
+//    function testq(error, thing){
+//        var data = thing;
+//        console.log("this taz", data)
+//    }
 
 
 </script>

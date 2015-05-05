@@ -1,4 +1,6 @@
 /* Accessibility map2 Visualization */
+
+//TODO add mode to the info box
 accessVizGlobals = {"current":null, "accessBrush":null};
 
 AccessVis = function(_parentElement, _classLabel){
@@ -28,6 +30,7 @@ AccessVis.prototype.projectPoint =function(x, y) {
 AccessVis.prototype.initVis = function() {
     var that = this;
     //D3 Overlay Stuff
+    $("#CM").addClass("selectedButton");
     accessVizGlobals.svg = d3.select(map2.getPanes().overlayPane).append("svg");
     accessVizGlobals.g = accessVizGlobals.svg.append("g").attr("class", "leaflet-zoom-hide");
     this.transform = d3.geo.transform({point: that.projectPoint});
@@ -153,7 +156,7 @@ AccessVis.prototype.wrangleData = function(access, level){
     d3.select("#theAccessHist").remove();
     //Control For First Case Situations
     var first = accessVizGlobals.current === null;
-    if(!accessVizGlobals.current){ accessVizGlobals.current = accessUnits.auto }
+    if(!accessVizGlobals.current){ accessVizGlobals.current = accessUnits.cauto }
 
     that.mode = access === accessUnits[accessUnits.method+"auto"] ? "a" :
         access === accessUnits[accessUnits.method+"transit"] ? "t" : "w";
@@ -174,7 +177,7 @@ AccessVis.prototype.wrangleData = function(access, level){
     if (accessVizGlobals.current !== access || first){
         accessVizGlobals.current = access;
         that.classify = chloroQuantile(that.rateByTAZ.values(), 8, "jenks");}
-    that.updateVis()
+    that.updateVis();
     that.accessHist(that.mode);
 };
 
@@ -213,8 +216,11 @@ AccessVis.prototype.addLegend = function() {
     legend.append("text")
         .attr("x", 50)
         .attr("y", function(d, i){ return legendHeight - (i*ls_h) - ls_h - 4;})
-        .text(function(d, i){ return legendData[i].toFixed(3) });
+        .text(function(d, i){
+            return accessUnits.method === "c" ? (legendData[i] * 100).toFixed() + "%" :
+             legendData[i].toFixed(3) });
 
+    that.updateAssetInfo();
 };
 
 AccessVis.prototype.toggleLegend = function(bool){
@@ -314,6 +320,12 @@ AccessVis.prototype.accessHist = function(mode){
         .style("text-anchor", "end")
         .text("Frequency");
 
+    svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", 10)
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .text("Histogram of Accessibility Values by Zone");
 
 };
 
@@ -333,4 +345,31 @@ AccessVis.prototype.brushMap = function(extent){
 
         })
     }
+};
+
+
+AccessVis.prototype.updateAssetInfo = function(){
+    var that = this;
+    $(".accessInfo").remove();
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'accessInfo');
+        this.update();
+        return this._div;
+    };
+
+    //Control FLow for Labels - sort of a mess but running out of time.
+    var label = accessUnits.method;
+    if (label === "g"){
+        label = "Gamma"
+    } else {
+        label = "Cutoff"
+    }
+
+
+    info.update = function (asset) {
+        this._div.innerHTML = '<h4>' + label + '</h4>'
+    };
+    info.addTo(map2);
+
+
 };

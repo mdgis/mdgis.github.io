@@ -94,7 +94,8 @@ assetsGlobals = {
     "tLineTotals": [0.897196826,1.014706875,1.739433176,5.146858912,10.36589447,15.3624629,63.38788192],
     "busLineTotals": [30.73420033,49.61719088,108.2431898,253.5823656,537.1498319,721.6394391,8612188.302],
     "roadTotals":[63.6618823,98.76279535,185.0449799,356.2532247,605.8486136,808.0996323,24577.17603],
-    "totalBusStops": 7678
+    "totalBusStops": 7678,
+    "totalLostTrips": [0.007918158,0.055871538,0.066958979,0.084825443,0.141989101,0.21624468, 1]
 };
 ///////Exiting Viz Object Global///////
 
@@ -174,23 +175,26 @@ AssetMapVis.prototype.wrangleDemData = function(dim, label, level) {
     var that = this;
     that.Assets.demoDim = label.toLowerCase();
     assetsGlobals.gradient = label.toLocaleLowerCase() === "jobs" ? golden : label.toLocaleLowerCase() === "pop" ? bluish :
-        label.toLocaleLowerCase() === "hh" ? redish : golden;
+        label.toLocaleLowerCase() === "households" ? redish : purplish;
     this.classMap = d3.map();
+    var newlabel = label === "TAZAREA" ? "TAZAR" : label;
+
+    console.log(label, "LABEL")
     Demographics[label.toLowerCase()].forEach(function (d) {
-        that.classMap.set(d.TAZ, d[label.toUpperCase() + "_" + 6 + "ft"])
+        that.classMap.set(d.TAZ, d[newlabel.toUpperCase() + "_" + 6 + "ft"])
     });
 
     assetsGlobals.assetMap = d3.map();
     dim.forEach(function (d) {
-        assetsGlobals.assetMap.set(d.TAZ, d[label.toUpperCase() + "_" + level + "ft"]);
+        assetsGlobals.assetMap.set(d.TAZ, d[newlabel.toUpperCase() + "_" + level + "ft"]);
     });
 
 
     if (that.asset_viz === null) {
         that.asset_viz = new AssetVis(d3.select("#chart"), Demographics.jobs, "Jobs");
         that.asset_viz2 = new AssetVis(d3.select("#chart1"), Demographics.pop, "Pop");
-        that.asset_viz3 = new AssetVis(d3.select("#chart2"), Demographics.hh, "hh");
-        that.asset_viz4 = new AssetVis(d3.select("#chart3"), Demographics.tazarea, "Taz Area Meters Sq.");
+        that.asset_viz3 = new AssetVis(d3.select("#chart2"), Demographics.households, "Households");
+        that.asset_viz4 = new AssetVis(d3.select("#chart3"), Demographics.firms, "Firms");
     }
 
     assetsGlobals.classify = chloroQuantile(this.classMap.values(), 8, "jenks");
@@ -285,7 +289,7 @@ AssetMapVis.prototype.updateAssetInfo = function(){
     if (thing === undefined){
         thing = that.Assets.selected === "Demographics" ?  "Jobs" : that.Assets.selected;
     } else {
-        thing = thing === "jobs" ? "Jobs" : thing === "pop" ? "Population" : thing === "hh" ? "Households" : null
+        thing = thing === "jobs" ? "Jobs" : thing === "pop" ? "Population" : thing === "households" ? "Households" : "Firms"
     }
 
 

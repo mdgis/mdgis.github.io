@@ -280,7 +280,7 @@ table.TransitSelector{
 
 td {
     min-width: 15%;
-    cursor: crosshair;
+    cursor: default;
 
 }
 
@@ -290,28 +290,42 @@ tr[class = tableRows ]:hover{
 
 .littleCharts:hover{
     cursor: pointer;
-    border-left: 2px solid red;
+    border-left: 1px solid red;
 }
 
-.info, .streetInfo, .assetLegend, .accessLegend, .tranistLegend{
+.assetLegend, .accessLegend, .transitLegend, .spiderLegend, .netLegend{
     padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
-    background: white;
-    background: rgba(255,255,255,0.8);
+    font: 14px/16px "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    background-color: rgba(255,255,255,0.8);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
+    border-radius: 2px;
 }
 
-.assetLegend, .accessLegend, .tranistLegend{
+.info, .netInfo, .streetInfo, .accessInfo, .spiderInfo{
+    padding: 0px 10px;
+    color: #ffffff;
+    font: 14px/16px "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    background-color: rgba(0,0,0,0.5);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 2px;
+}
+
+.assetLegend, .accessLegend, .transitLegend, .spiderLegend,.netLegend{
     height: 200px;
     width: 100px;
 }
 
-.tranistLegend{
+.transitLegend{
     height: 170px;
 }
+.spiderLegend{
+    height: 175px;
+}
 
-.tranistLegend text{
+#totalLost{
+    height: 100%;
+}
+.transitLegend text{
     font-size: 12px;
 }
 
@@ -351,9 +365,24 @@ div.accessTip {
 .fillerButton{
     border: none;
     z-index: -1;
-    widows: 5px;
+
 }
 
 #allButMenu{
     margin-left: 1%;
+}
+
+.sptrue{
+    stroke: black;
+    stroke-width: 3px;
+}
+
+#totalLost{
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #cccccc;
+}
+
+.littleSpecial{
+    margin-left: 75px;
 }

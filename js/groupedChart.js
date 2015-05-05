@@ -13,6 +13,7 @@ GroupChartVis = function(_parentElement){
     this.width = 600 - this.margin.left - this.margin.right;
     this.height = 400 - this.margin.top - this.margin.bottom;
     this.groupData = null;
+    this.format = null;
     this.initVis();
 };
 
@@ -67,6 +68,7 @@ GroupChartVis.prototype.initVis = function() {
 
 GroupChartVis.prototype.updateVis = function(first, normal_I){
         var that = this;
+    that.format = d3.format("0,000");
         that.x0.domain(that.groupData.map(function (d) {
             return d.Level;
         }));
@@ -91,8 +93,11 @@ GroupChartVis.prototype.updateVis = function(first, normal_I){
 
 
     if (!first){
-        this.svg.select(".y.axis.Groups").call(this.yAxis);
-        this.svg.select(".x.axis.Groups").call(this.xAxis);
+        console.log("not first")
+        that.yAxis
+            .tickFormat(that.format);
+        that.svg.select(".y.axis.Groups").call(this.yAxis);
+        that.svg.select(".x.axis.Groups").call(this.xAxis);
 
         d3.select("#groupYlabel").classed("hide", false);
         that.slrLevel = that.svg.selectAll(".slrLevel")
@@ -153,6 +158,10 @@ GroupChartVis.prototype.updateVis = function(first, normal_I){
 
             this.transitionBars()
     } else {
+        that.format = normal_I ? d3.format("%") : d3.format("0,000");
+        that.yAxis
+            .tickFormat(that.format);
+        console.log("HER")
         this.svg.select(".y.axis.Groups").transition().duration(1000).call(this.yAxis);
         that.slrBars.transition().duration(1000)
             .attr("y", function (d) {
@@ -170,6 +179,7 @@ GroupChartVis.prototype.updateVis = function(first, normal_I){
 
 GroupChartVis.prototype.transitionVis = function() {
     var that = this;
+    that.normal = false;
     that.slrBars.transition().duration(700)
         .attr("height", function(d) {
             return that.height - that.y(0)
@@ -215,5 +225,5 @@ GroupChartVis.prototype.wrangleData = function(_dataSource, label){
         });
     });
 
-    this.updateVis()
+    that.updateVis(false, false)
 };

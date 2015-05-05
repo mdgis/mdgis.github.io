@@ -1,18 +1,19 @@
 /**
  * Created by mdowd on 4/10/15.
  */
-//TODO add legend
+
 var spider_viz = null;
+spiderVizGlobals = {spiderBrush:null, spiderMode:"Auto", first:true};
 SpiderViz = function(_parentElement){
     this.parentElement = _parentElement;
     this.Mtaz = null;
     this.links = [];
-    this.vals = [];
     this.auto = null;
     this.transit = null;
     this.taz = null;
 
-    queue().defer(d3.json, "RawData/tazCtopo.json")
+    queue().defer(d3.json, "data/tazCtopo.json")
+        .defer(d3.csv, "data/spider/diffAuto1ftClean.csv")
         .defer(d3.csv, "data/spider/diffAuto2ftClean.csv")
         .defer(d3.csv, "data/spider/diffAuto3ftClean.csv")
         .defer(d3.csv, "data/spider/diffAuto4ftClean.csv")
@@ -30,16 +31,28 @@ SpiderViz = function(_parentElement){
         .defer(d3.csv, "data/spider/total4ftClean.csv")
         .defer(d3.csv, "data/spider/total5ftClean.csv")
         .defer(d3.csv, "data/spider/total6ftClean.csv")
-
         .await(this.ready);
+
+    //Initialize Legend
+    var Slegend = L.control( { position: 'bottomright' } );
+    Slegend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'spiderLegend');
+        console.log("add the spider div");
+        return div
+    };
+    Slegend.addTo(map4);
+
+    //Make Iniitial Button Selection
+    $("#spAuto").addClass("selectedButton");
 
 };
 
-SpiderViz.prototype.ready = function(error,taz,auto2,auto3,auto4,auto5,auto6,pt1,pt2,pt3,pt4,pt5,pt6,t1,t2,t3,t4,t5,t6) {
+SpiderViz.prototype.ready = function(error,taz,auto1,auto2,auto3,auto4,auto5,auto6,pt1,pt2,pt3,pt4,pt5,pt6,t1,t2,t3,t4,t5,t6) {
     var that = spider_viz;
     that.taz = taz;
     that.spiderData = {
         "current": "auto",
+        "auto1": auto1,
         "auto2": auto2,
         "auto3": auto3,
         "auto4": auto4,
@@ -59,13 +72,16 @@ SpiderViz.prototype.ready = function(error,taz,auto2,auto3,auto4,auto5,auto6,pt1
         "t6": t6
     };
 
+    that.loaded(that.taz, that.spiderData.auto1)
     that.initSpiderHist();
 
 };
 
 SpiderViz.prototype.initVis = function(){
     var that = this;
-    that.vMax = d3.max(that.links, function(d) {return Math.abs(d.val)});
+    //that.vMax = d3.max(that.links, function(d) {return Math.abs(d.val)});
+    that.vMax = spiderVizGlobals.spiderMode === "Transit" ? 1275 : 7715;
+    console.log("init max", that.vMax)
     that.vScale = d3.scale.linear()
         .domain([10,that.vMax])
         .rangeRound([0,30]);
@@ -74,9 +90,15 @@ SpiderViz.prototype.initVis = function(){
         .domain([10,that.vMax])
         .range([.1,.8]);
 
+    //Hard Coded for now - Not Ideal but I'm trying to cut down some of the load time.
+    that.transitDomain = [25,50,100,250,500, 750, 1275];
+    that.autoDomain = [50,250,500,1000,3000,5000,7715];
+
+    that.lineDomain = spiderVizGlobals.spiderMode === "Transit" ? that.transitDomain : that.autoDomain;
+    that.colorDomain = ["black","purple","darkblue","blue","red", "orange", "yellow"];
     that.color = d3.scale.linear()
-        .domain([50,250,500,1000,3000,5000,that.vMax])
-        .range(["black","purple","darkblue","blue","red", "orange", "yellow"]);
+        .domain(that.lineDomain)
+        .range(that.colorDomain);
 
 
     that.featureLine = that.g.append("g").attr("class","spiderLines").attr("class", "leaflet-zoom-hide")
@@ -140,7 +162,9 @@ SpiderViz.prototype.initVis = function(){
         that.featureLine.attr("d", that.path);
     }
 
-    that.updateSpiderHist();
+    that.addLegend();
+    if (!spiderVizGlobals.first) {that.updateSpiderHist();}
+    spiderVizGlobals.first = false;
 };
 
 SpiderViz.prototype.updateVis = function(extent){
@@ -166,6 +190,7 @@ SpiderViz.prototype.projectPoint = function (x, y) {
 };
 
 SpiderViz.prototype.loaded = function(taz, spider) {
+    console.log("in Loaded")
     var that = spider_viz;
     that.Mtaz = taz;
     that.links = [];
@@ -212,7 +237,7 @@ SpiderViz.prototype.initSpiderHist = function(){
     // A formatter for counts.
     var formatCount = d3.format(",.0f");
 
-    that.SPHmargin = {top: 10, right: 30, bottom: 30, left: 50};
+    that.SPHmargin = {top: 30, right: 30, bottom: 30, left: 50};
     that.SPHwidth = 600 - that.SPHmargin.left - that.SPHmargin.right;
     that.SPHheight = 500 - that.SPHmargin.top - that.SPHmargin.bottom;
 
@@ -262,6 +287,13 @@ SpiderViz.prototype.initSpiderHist = function(){
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text("Frequency");
+
+    that.spiderHistSvg.append("text")
+        .attr("x", (this.SPHwidth / 2))
+        .attr("y", 10)
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .text("Histogram of Lost Trip Totals by Zone");
 };
 
 SpiderViz.prototype.updateSpiderHist = function(){
@@ -300,13 +332,14 @@ SpiderViz.prototype.updateSpiderHist = function(){
 
     that.SPHjoin.exit().remove();
 
+    spiderVizGlobals.spiderBrush = d3.svg.brush;
+
     that.spiderHistSvg.append("g")
-        .attr("class", "brush")
-        .call(d3.svg.brush().x(that.SPHx)
+        .attr("class", "brush spider")
+        .call(spiderVizGlobals.spiderBrush().x(that.SPHx)
             .on("brush", brushed))
         .selectAll("rect")
         .attr("height", that.SPHheight);
-
 
 
 
@@ -318,7 +351,7 @@ SpiderViz.prototype.updateSpiderHist = function(){
 
     that.spiderHistSvg.select(".y.axis")
         .transition().duration(750)
-        .call(that.SPHyAxis)
+        .call(that.SPHyAxis);
 
 
     that.spiderHistSvg.select(".x.axis")
@@ -332,13 +365,92 @@ SpiderViz.prototype.updateSpiderHist = function(){
 SpiderViz.prototype.changeMode = function(e){
     var that = this;
     var level = $("#LostSlider").val();
+    d3.selectAll("g.brush.spider").remove();
     var spider = e.innerText === "Auto" ? "auto"  :
         e.innerText === "Transit" ? "pt" :
             e.innerText === "Total" ? "t" :
             null;
+    //accessVizGlobals.accessBrush().clear();
+    //spiderVizGlobals.spiderBrush().clear();
     d3.selectAll(".spiderBar").remove();
     if (spider !== null){
+        spiderVizGlobals.spiderMode = e.innerText; //Used to pick the correct domain in next steps
         that.spiderData.current = spider;
+        d3.selectAll(".spiderLegendRect").remove();
+        d3.selectAll(".spiderLegendSVG").remove();
         that.loaded(that.taz, that.spiderData[spider+level]);
+
+       $("#spAuto").removeClass("selectedButton");
+       $("#spTransit").removeClass("selectedButton");
+       $("#spTotal").removeClass("selectedButton");
+       $("#sp" +spiderVizGlobals.spiderMode).addClass("selectedButton");
+
     }
+
+
+
+};
+
+
+SpiderViz.prototype.addLegend = function() {
+    console.log("adding spider legend")
+    var that = this;
+
+    var legendData = that.lineDomain;
+    var legendHeight = 170;
+    var legend = d3.select(".spiderLegend")
+        .append("svg")
+        .attr("class","spiderLegendSVG")
+        .attr("width",100)
+        .attr("height",legendHeight)
+        .append("g")
+        .attr("transform", "translate(0,10)")
+        .selectAll("g.spiderLegend")
+        .data(legendData.reverse())
+        .enter()
+        .append("g")
+        .attr("class", "spiderLegend");
+
+    var ls_w = 30, ls_h = 20;
+
+    legend.append("rect")
+        .attr("class","spiderLegendRect")
+        .attr("x", 10)
+        .attr("y", function(d, i){ return legendHeight - (i*ls_h) - 2*ls_h;})
+        .attr("width", ls_w)
+        .attr("height", ls_h)
+        .attr("fill", function(d, i) {
+            return that.color(d)
+        })
+        .style("opacity", 0.6);
+
+    legend.append("text")
+        .attr("x", 50)
+        .attr("y", function(d, i){ return legendHeight - (i*ls_h) - ls_h - 4;})
+        .text(function(d, i){ return "-" + legendData[i].toFixed() });
+
+    legend.append("text")
+        .attr("x", 13)
+        .attr("y", 3)
+        .attr('text-anchor', 'start')
+        .text("Lost Trips");
+
+    that.updateAssetInfo();
+};
+
+SpiderViz.prototype.updateAssetInfo = function(){
+    var that = this;
+    $(".spiderInfo").remove();
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'spiderInfo');
+        this.update();
+        return this._div;
+    };
+
+    info.update = function (asset) {
+        this._div.innerHTML = '<h4>' + spiderVizGlobals.spiderMode + '</h4>'
+    };
+    info.addTo(map4);
+
+
 };

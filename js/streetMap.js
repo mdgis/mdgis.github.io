@@ -112,7 +112,7 @@ function distance(lat1, lon1, lat2, lon2) {
 }
 
 //Node Processing - Outputs Nested JSON saying which transit line is at which Transit Stop
-d3.tsv("RawData/PtOnOff.csv", function(data){
+d3.tsv("data/PtOnOff.csv", function(data){
     //First Determine all Unique Nodes
     data.forEach(function(d){
         if (!StreetMapGlobals.rootNodes[d.A]) {
@@ -263,7 +263,7 @@ StreetMapVis.prototype.initVis = function(){
 
     var Tlegend = L.control( { position: 'bottomright' } );
     Tlegend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'tranistLegend');
+        var div = L.DomUtil.create('div', 'transitLegend');
 
         return div
     };
@@ -546,7 +546,7 @@ StreetMapVis.prototype.addLegend = function() {
     //var legendData = [{loss:20000,goin:0},{loss:10000,gain:0},{loss:500,gain:0}]
     var legendHeight = 170;
 
-    var legend = d3.select("div.tranistLegend")
+    var legend = d3.select("div.transitLegend")
         .append("svg")
         .attr("class","transitLegendSVG")
         .attr("width",100)

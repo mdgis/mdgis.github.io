@@ -108,7 +108,7 @@
                 <a href="#autoNet">Auto Network</a>
             </li>
             <li>
-                <a href="#">Process Book</a>
+                <a href="docs/DowdProcessBook.pdf" target="_blank">Process Book</a>
             </li>
             <li>
                 <a href="#" data-toggle="modal" data-target="#accessModal" >Use Video</a>
@@ -138,18 +138,21 @@
 
 
                 <h1>Visualizing Inundation Impacts on Transportation Networks</h1>
-                <p> A major source of uncertainty for many cities and regions throughout the world is the potential impacts of climate change. These impacts include, but are not limited to, extreme weather events, changes in global temperature, droughts, and sea level rise. Of these many potential impacts sea level rise is perhaps the most relevant to transportation systems as higher sea levels coupled with extreme weather hold the potential for inundation of transportation networks and resulting impacts to the people that live, work and travel to these areas.
+                <p>
+                    A major source of uncertainty for many cities and regions throughout the world is the potential impacts of climate change. These impacts include, but are not limited to, extreme weather events, changes in global temperature, droughts, and sea level rise. Of these many potential impacts, sea level rise is perhaps the most relevant to transportation systems: higher sea levels coupled with extreme weather hold the potential to inundate transportation networks and impact the people that live, work and travel to these areas.
                 </p>
-                    <p>My thesis research focuses on modeling inundation impacts on transportation networks in the Boston Metro Region. The data for the "Inundated Assets" visualization is derived from GIS analysis in Arcmap. All other charts have data derived from
-                    the MIT - <a href="http://citilabs.com/software/products/cube/cube-voyager" target="_blank">Cube Voyager</a>  Four Step Transportation Model. Four Step models are used to estimate the
-                        travel patterns in a region. The output of these models includes origin destination matrices by different modes, as well as network (Transit & Highway) attributes that describe the performance of the network given the number of users in the system.
-                        For more information on four step models please see the <a href="http://en.wikipedia.org/wiki/Transportation_forecasting#Four-step_models" target="_blank">basic description</a> for a more
-                    the detailed description of methods and models please see this <a href="http://ntl.bts.gov/lib/21000/21500/21563/PB99126724.pdf" target="_blank">source</a> or contact <a href="mailto:mikdowd@gmail.com">Michael Dowd</a>.
+                    <p>
+                        My thesis research focuses on modeling inundation impacts on transportation networks in the Boston Metro Region. The data for the "Inundated Assets" visualization is derived from GIS analysis in ArcMap.
+                        All other charts have data derived from the MIT - <a href="http://citilabs.com/software/products/cube/cube-voyager" target="_blank">Cube Voyager</a>  Four Step Transportation Model. Four step models are used to estimate the travel patterns in a region. The output of these models includes
+                        origin destination matrices by different modes, as well as network (Transit & Highway) attributes that describe the performance of the network given the number of users in the system. For more information
+                        on four step models please see the <a href="http://en.wikipedia.org/wiki/Transportation_forecasting#Four-step_models" target="_blank">basic description</a>. For a more detailed description of methods and models please see this <a href="http://ntl.bts.gov/lib/21000/21500/21563/PB99126724.pdf" target="_blank">source</a> or contact <a href="mailto:mikdowd@gmail.com">Michael Dowd</a>.
 
-                </p>
+                    </p>
                 <h4><strong>Assumptions</strong></h4>
-                <p>When modeling inundation in the Cube model system, I assume that all users of the sytem will attempt to complete their trip even if portions of the region are inundated.
-                I am modeling a normal day where the transport network is compromised but people still attempt to complete their normal trips if possible. </p>
+                <p>
+                    When modeling inundation in the Cube model system, I assume that all users of the sytem will attempt to complete their trip even if portions of the region are inundated.
+                    I am modeling a normal day where the transport network is compromised but people still attempt to complete their normal trips, if possible.
+                </p>
                 <h4><em>For information on using and interpreting this visualization please reference the</em> <a href="#" target="_blank">Use Video.</a></h4>
                 <h2>Inundated Assets</h2>
                     <div class="btn-group-horizontal btn-group" id = "AssetSelection">
@@ -321,7 +324,7 @@
         <!--*************************** LOST TRIPS CHANGE ***************************-->
         <div class =  "row clearfix" id="lostTrips">
             <div class="col-md-12 column intro" >
-                <h1>Lost Trips Given 4ft of Inundation</h1>
+                <h1>Lost Trips</h1>
             </div>
             <div class="col-md-12 column">
                 <div class="btn-group-horizontal btn-group" id = "SpiderSelection" class = "containerGroup">
@@ -392,11 +395,13 @@
                             <h4 class="modal-title" id="assetModalLabel">Inundated Assets</h4>
                         </div>
                         <div class="modal-body">
-                            <p>This visualization shows different assets (Jobs, Transit Stations, Roads, etc. that are impacted by flooding. The data is derived from
-                            GIS intersection analyses. Jobs, Population and Household data were only available at a zonal level therefore impacts were determined using a
-                                proportional split procedure where the proportion of inundated area in a zone was used to determining the proportion of impacted assets in
-                                that zone. All other data was available as point data that had specific X & Y coordinates. These data sources were directly intersected with the
-                            different water layers to determine if they were potentially impacted.
+                            <p>
+                                This visualization shows different assets (Jobs, Transit Stations, Roads, etc.) that are impacted by flooding. The data is derived from GIS intersection analyses.
+                                Jobs, Population and Household data were only available at a zonal level; therefore, impacts were determined using a proportional split procedure where the proportion of
+                                inundated area in a zone was used to determine the proportion of impacted assets in that zone. All other data was available as point data that had specific X & Y coordinates.
+                                These data sources were directly intersected with the different water layers to determine if they were potentially impacted.
+
+                            </p>
                             <h3>Use:</h3>
                             <ul>
                                 <li>The buttons trigger different data sources and corresponding graphs. The main data sources are Demographics, Transit and Auto.</li>
@@ -404,8 +409,8 @@
                                 <li>The slider bar transitions the data for the different inundation levels. </li>
                                 <li>There are two tabs to the right of the main map: Charts & Specifics
                                     <ul>
-                                        <li>Charts contains small charts showing the changing impact over the different inundation levels</li>
-                                        <li>Specifics contains a grouped bar chart highlight a specific detail of the data related to either Demographics, Highway, or Transit</li>
+                                        <li>“Charts” contains small charts showing the changing impact over the different inundation levels</li>
+                                        <li>“Specifics” contains a grouped bar chart highlighting a specific detail of the data related to either Demographics, Highway, or Transit</li>
                                     </ul>
 
                                 </li>
@@ -414,11 +419,9 @@
                             </ul>
                             <h3>Main Findings</h3>
                             <ul>
-                                <li>By examining the grouped chart under the specifics tab in the Demographics data we see that the percentage impact of inundation on service jobs is very high. Service jobs are arguably the most important sector to the economy and are growing faster than retail and basic jobs
-                                This highlights that flooding has the potential to cause major economic impacts on the city of Boston just from and employment perspective.
+                                <li>By examining the grouped chart under the specifics tab in the Demographics data we see that the percentage impact of inundation on service jobs is very high. Service jobs are arguably the most important sector to the economy and are growing faster than retail and basic jobs This highlights that flooding has the potential to cause major economic impacts on the city of Boston just from an employment perspective.
                                 </li>
-                                <li>In terms of Transit the Red Line and Blue line see major impacts under inundation levels four feet and higher. We can expect many transit users will be unable
-                                to reach a destination if inundation has occurred in the city because of </li>
+                                <li>In terms of Transit, the Red Line and Blue Line see major impacts under inundation levels four feet and higher. We can expect many transit users will be unable to reach a destination if inundation has occurred in the city.</li>
                             </ul>
                         </div>
                         <div class="modal-footer">
@@ -437,14 +440,12 @@
                             <h4 class="modal-title" id="myModalLabel">Transit Ridership</h4>
                         </div>
                         <div class="modal-body">
-                            <p>This visualization shows the difference between ridership on transit routes given no inundation and four feet of inundation.
-                                Inundation causes some routes to be heavily impacted or inoperable in some regions. The model allows portions of a route to operate
-                                even if other portions are inundated. The four foot inundation level is presented because there are major impacts while much of the region
-                                is still free of inundation. I do not present all six inundation levels because of data size constraints.
+                            <p>
+                                This visualization articulates the difference between ridership on transit routes at no inundation versus four feet of inundation. Inundation causes specific routes to be heavily impacted or inoperable in certain regions. The model allows portions of a route to operate even if other portions are inundated. The four-foot inundation level is presented because there are major impacts, though much of the region is still free of inundation. I do not present all six inundation levels because of data size constraints.
                                 </p>
-                            <p>This visualization allows us to examine possible shifts in ridership due to inundation impacts. A possible question that can be examined with
-                            this visualization is "If the Red Line is inundated what other routes might persons use to reach their destination." Such answers could be used to preemtively
-                            bolster service on specific bus routes or rail lines</p>
+                            <p>
+                                This visualization allows us to examine possible shifts in ridership due to inundation impacts. A possible question that can be examined with this visualization is "If the Red Line is inundated what other routes might persons use to reach their destination." Such answers could be used to preemptively bolster service on specific bus routes or rail lines.
+                            </p>
                             <h3>Use</h3>
 
                             <h4>The Table</h4>
@@ -461,19 +462,19 @@
 
 
                             <h4>Ridership Increase</h4>
-                            <p>When this button is selected if a route is selected from the table the only stops visualized will be those stops along the selected route
-                            and those stops within 1/2 mile of the selected route that had increases in ridership. This allows a user to search for routes that possibly gained
-                            ridership because of inundation on another route. (See Red Line) </p>
+                            <p>
+                                When the “ridership increase” button and a route are selected from the table, the only stops visualized will be those stops along the selected route. Stops within 1/2 mile of the selected route that had increases in ridership will also be highlighted. This allows a user to search for routes that possibly gained ridership because of inundation on another route. (See Red Line).
+                            </p>
                             <h4>Ridership Decrease</h4>
-                            <p>When this button is selected if as route is selected from the table the only stops visualized will be the stops on the selected route
-                            and those stops withing 1/2 mile of the selected route that had decreases in ridership. This allows a user to search for routes that may have gained riders
-                            in response to other nearby routes being inundated. (See CT2) </p>
+                            <p>
+                                When the “ridership decrease” button and a route are selected from the table, the only stops visualized will be the stops on the selected route, as well as those stops within 1/2 mile of the selected route that had decreases in ridership. This allows a user to search for routes that may have gained riders in response to other nearby routes being inundated. (See CT2).
+                            </p>
 
                             <h3>Main Findings</h3>
                             <ul>
-                                <li>Provides a unique opportunity to see potential shifts in route choice given inundation in the area and on the network.</li>
-                                <li>Fixed rail lines see major decreases in ridership that is not accounted for in increases in bus ridership.</li>
-                                <li>The bus routes CT2 and 85 see increases in ridership that are likely coming from Red Line users who can no longer reach their destination on that route.</li>
+                                <li>A unique opportunity to see potential shifts in route choice given inundation in the area and on the network is provided.</li>
+                                <li>Fixed rail lines see major decreases in ridership that are not accounted for in increases in bus ridership.</li>
+                                <li>The transference of riders from the Red Line to bus routes CT2 and 85 is illuminated. This  increase in ridership is likely Red Line users who can no longer reach their destination on that route.</li>
 
                              </ul>
 
@@ -497,24 +498,24 @@
                     </div>
                     <div class="modal-body">
 
-                        <p>Accessibility metrics attempt to quantify the ability to reach assets (in this case Jobs) from a zone. The simplest accessibility measure is a cutoff measure
-                            which communicates the number of jobs a person in a given zone can reach within a certain amount of time. These are sometimes called <a href="http://wiki.openstreetmap.org/wiki/Isochrone" target="_blank">Isochrones</a>.
-                            I have normalized to sum of all jobs accessible from each zone in an hour by diving by the total number of jobs in the model region.
+                        <p>Accessibility metrics attempt to quantify the ability to reach assets (in this case Jobs) from a zone. The simplest accessibility measure is a cutoff measure which communicates the number of jobs a
+                            person in a given zone can reach within a certain amount of time. These are also called  <a href="http://wiki.openstreetmap.org/wiki/Isochrone" target="_blank">Isochrones</a>.
+                            I have normalized each zone’s accessibility by dividing the number of jobs within each zone accessible within an hour by the total number of jobs in the model region.
                         </p>
                         <p>
-                            There are many other accessibility metrics that vary in complexity, I have included a measure that incorporates an impedance function, a Gamma Measure. This accessibility counts
-                            jobs that take longer to access less than those that take a shorter time. THere is no time cutoff in this measure, though at high travel times the contribution of a zones jobs to the total sum of
+                            There are many other accessibility metrics that vary in complexity, I have included a measure that incorporates an impedance function, or a Gamma Measure. This accessibility more heavily weighs
+                            jobs that take shorter time to access than those that take a longer time. There is no time cutoff in this measure, though at high travel times the contribution of a zone’s jobs to the total sum of
                             weighted jobs is close to zero. The gamma measure output values can only be interpreted relative to other gamma function values.
                         </p>
 
                         <h3>Use</h3>
-                        <p>The slider will display the accessibility changes over the different inundation levels. One can view the accessibility for Walk, Transit and Auto. The scale for each mode is fixed to
-                        facilitate comparison over inundation levels. </p>
+                        <p>The slider will display the accessibility changes over the different inundation levels. One can view the accessibility for Walk, Transit and Auto.
+                            The scale for each mode is fixed to facilitate comparison over inundation levels.</p>
                         <p>The Accessibility Histogram is "brushable" and will show only those zones with corresponding values in the map.</p>
 
                         <h3>Main Findings</h3>
                         <ul>
-                            <li>Auto always has the highest accessibility and is much less impacted by inundation because of the dense and redundant road network in the region</li>
+                            <li>Auto always has the highest accessibility and is much less impacted by inundation because of the dense and redundant road network in the region.</li>
                             <li>Transit and Walk accessibility to jobs is always drastically smaller than Auto accessibility and is concentrated region's inner core.</li>
                             <li>Transit accessibility to jobs is drastically impacted by inundation.</li>
 
@@ -562,23 +563,27 @@
                     </div>
                     <div class="modal-body">
                         <p>
-                            Many trips can no longer be completed given inundation of the road and transit networks. This visualization shows those origin and destination pairs that lost the most trips. I used a cutoff value of 50 trips to prune the dataset down plus the direction of flow is
-                            collapsed as well to reduce the size of the data. Meaning that trips lost between zones O & D are grouped with trips lost between zones D & O.
-                            If the total lost trips between a given Origin and Destination was less than 50 then a line is not drawn. The thickness of the lines indicate the number of lost trips they are further redundantly encoded by color.
-                            to make them visually clear. This type of visualization is sometimes called a <a href="http://www.fhwa.dot.gov/planning/census_issues/ctpp/training/flow.cfm>" target="_blank">"Desire Line"</a>  map and is usually generated in proprietary transport modeling software packages.
+                            Many trips can no longer be completed given inundation of the road and transit networks.
+                            This visualization shows those origin and destination pairs that lost the most trips. I used
+                            a cutoff value of 50 trips to prune the dataset down. The direction of flow is collapsed, as well,
+                            to reduce the size of the data. This means that trips lost between zones O & D are grouped with trips
+                            lost between zones D & O. If the total lost trips between a given Origin and Destination was less than
+                            50 then a line is not drawn. The thickness of the lines indicates the number of lost trips. Furthermore,
+                            they are redundantly encoded by color to make them visually clear. This type of visualization is commonly
+                            called a <a href="http://www.fhwa.dot.gov/planning/census_issues/ctpp/training/flow.cfm" target="_blank">"Desire Line"</a>
+                            map and is typically generated in proprietary transport modeling software packages.
                         </p>
                         <h3>Use</h3>
                         <p>Click the Buttons to change between Transit, Auto, Total. </p>
                         <p>Total is just the sum of Transit and Auto.</p>
                         <p>The Lost Trips Histogram is "brushable" and linked to the map. When brushed only those brushed values will appear in the map.</p>
-                        <p>The <em>Total Percent of Lost Trips</em> is included for reference. About 16.4 Million total number of trips  occur in one day in the model region.</p>
+                        <p>The <em>Total Percent of Lost Trips</em> is included for reference. About 16.4 Million total number of trips occur in one day in the model region.</p>
                     <h3>Main Findings:</h3>
                         <ul>
-                            <li>The greatest number of lost auto trips occur north of the inner core. Though the total number summed by the inner core is likely larger but the trips
-                            are split up into many different zones.</li>
+                            <li>The greatest number of lost auto trips occur north of the inner core. Though the total number summed by the inner core is likely larger, it is key to note that because the trips are split up into many different zones and zones are smaller in the inner core the values can appear smaller.</li>
                             <li>Transit Lost trips are far fewer but very concentrated in the inner core.
                             </li>
-                            <li>Lost trips occur where inundation occers (reference inundated assets map)</li>
+                            <li>Lost trips occur where inundation occurs (reference inundated assets map)</li>
                         </ul>
 
                     </div>
@@ -601,16 +606,17 @@
                         <p>This visualization shows the modeled highway volumes and queues of vehicles across the six different inundation levels. </p>
 
                         <h3>Volumes</h3>
-                        <p>Modeled auto volumes each link. The unit of measurement is vehicles per link.</p>
+                        <p>Modeled auto on volumes each link. The unit of measurement is vehicles per link.</p>
                         <h3>Queues</h3>
-                        <p>Queuing vehicles are those vehicles that can pass througha given link because of congestion on the highway network. Areas of high queues would
-                        be areas that are heavily congested (i.e. standstill traffic). </p>
+                        <p>Queuing vehicles are those vehicles that can pass through a given link because of congestion on the highway network.
+                            Areas of high queues would be areas that are heavily congested (i.e. standstill traffic).</p>
 
                         <h3>Main Findings:</h3>
                         <ul>
                             <li>As inundation increases volumes move to outer ring roads (MA Route 128 & HWY 95 & HWY 93)</li>
-                            <li>As inundation increases queues move toward these outer ring roads as well, though there are other links that become heavily congested
-                            in the inner core area. These links are likely congested because other alternative links are inundated.
+                            <li>As inundation increases queues move toward these outer ring roads as well, though there are other links
+                                that become heavily congested in the inner core area.
+                                These links are likely congested because other alternative links are inundated.
                             </li>
                             <li>At six feet of inundation there is much less congestion in the network because there are far fewer vehicles in the network overall</li>
                         </ul>
@@ -954,6 +960,7 @@
 
                 if (asset_map_viz.Assets.lookUp[check] !== asset_map_viz.Assets.lookUp[currentValue]) {
                     d3.selectAll(".littleCharts").remove();
+                    $("#Assetrange").text("0ft");
                     removeWater(map3);
                     updateSpecialChart(check);
 
@@ -995,7 +1002,7 @@
         //Lost Trip Buttons
         $("#SpiderSelection").on("click", function(e){
             if (e.target !== "range" && ["Auto", "Transit", "Total"].indexOf(e.target.innerText) > -1){
-                    console.log("in the spider button click", e.target.innerText);
+                    //console.log("in the spider button click", e.target.innerText);
                     d3.selectAll(".spiderBar").remove();
                     d3.selectAll(".theSpiderLines").remove();
                     d3.selectAll(".centroids").remove();

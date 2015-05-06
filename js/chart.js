@@ -16,8 +16,8 @@ AssetVis = function(_parentElement, _data, _label){
     this.denominator = 1;
 
     // define all constants here
-    this.margin = {top: 30, right: 50, bottom: 30, left: 80};
-    this.width = 340 - this.margin.left - this.margin.right;
+    this.margin = {top: 30, right: 50, bottom: 30, left: 60};
+    this.width = 320 - this.margin.left - this.margin.right;
     this.height = 200 - this.margin.top - this.margin.bottom;
     this.initVis();
 };
@@ -107,7 +107,7 @@ AssetVis.prototype.initVis = function(){
 };
 
 AssetVis.prototype.wrangleData= function(){
-    console.log("the data", this.data)
+   // console.log("the data", this.data)
     var totals = {};
     for (var key in this.data[0]){
         totals[key] = 0
@@ -123,10 +123,10 @@ AssetVis.prototype.wrangleData= function(){
     this.displayData = [];
     for (var key in totals){this.displayData.push(totals[key])}
 
-    console.log("display Data",this.label, this.displayData)
+    //console.log("display Data",this.label, this.displayData)
     this.totalAssets = this.displayData[6];
     this.displayData = this.displayData.slice(0,6);
-    console.log("this.totalAssets", this.label, this.totalAssets)
+    //console.log("this.totalAssets", this.label, this.totalAssets)
 
 };
 

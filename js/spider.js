@@ -37,7 +37,7 @@ SpiderViz = function(_parentElement){
     var Slegend = L.control( { position: 'bottomright' } );
     Slegend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'spiderLegend');
-        console.log("add the spider div");
+
         return div
     };
     Slegend.addTo(map4);
@@ -81,7 +81,7 @@ SpiderViz.prototype.initVis = function(){
     var that = this;
     //that.vMax = d3.max(that.links, function(d) {return Math.abs(d.val)});
     that.vMax = spiderVizGlobals.spiderMode === "Transit" ? 1275 : 7715;
-    console.log("init max", that.vMax)
+    //console.log("init max", that.vMax)
     that.vScale = d3.scale.linear()
         .domain([10,that.vMax])
         .rangeRound([0,30]);
@@ -190,7 +190,7 @@ SpiderViz.prototype.projectPoint = function (x, y) {
 };
 
 SpiderViz.prototype.loaded = function(taz, spider) {
-    console.log("in Loaded")
+
     var that = spider_viz;
     that.Mtaz = taz;
     that.links = [];
@@ -393,7 +393,7 @@ SpiderViz.prototype.changeMode = function(e){
 
 
 SpiderViz.prototype.addLegend = function() {
-    console.log("adding spider legend")
+
     var that = this;
 
     var legendData = that.lineDomain;

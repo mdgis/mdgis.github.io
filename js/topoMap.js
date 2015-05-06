@@ -65,7 +65,7 @@ NetViz.prototype.updateVis = function(collection, netAttribute) {
     }
 
     var vMax = netAttribute === "V" ? netVizGlobals.volClassify[7] : netVizGlobals.qClassify[7];
-    console.log(vMax, "BJHBJHBJ")
+
 
     var displayDomain = netAttribute === "V" ? netVizGlobals.volClassify : netVizGlobals.qClassify;
     netVizGlobals.legendDomain = displayDomain.slice(0,8);
@@ -126,7 +126,7 @@ NetViz.prototype.updateVis = function(collection, netAttribute) {
 
 
 NetViz.prototype.addLegend = function() {
-    console.log("adding net legend");
+    //console.log("adding net legend");
     var that = this;
 
     var legendData = netVizGlobals.legendDomain;
